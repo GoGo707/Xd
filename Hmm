@@ -1,1 +1,1978 @@
-.
+singularitylibrary = {}
+
+local rs = game:GetService("RunService")
+local ts = game:GetService("TweenService")
+local uis = game:GetService("UserInputService")
+
+local function singularitywait(seconds)
+    local start = os.clock()
+    repeat
+        rs.Heartbeat:Wait()
+    until os.clock() - start >= seconds
+end
+
+local colorPalette = {
+    primary = Color3.fromRGB(237, 52, 109),
+    secondary = Color3.fromRGB(101, 101, 101),
+    background = Color3.fromRGB(11, 11, 11),
+    surface = Color3.fromRGB(16, 16, 16),
+    accent = Color3.fromRGB(41, 41, 41),
+    success = Color3.fromRGB(76, 175, 80),
+    warning = Color3.fromRGB(255, 152, 0),
+    error = Color3.fromRGB(244, 67, 54),
+    info = Color3.fromRGB(33, 150, 243)
+}
+
+local memoryManager = {
+    instances = {},
+    connections = {},
+    tweens = {}
+}
+
+function memoryManager:track(instance, category)
+    category = category or "general"
+    if not self.instances[category] then
+        self.instances[category] = {}
+    end
+    table.insert(self.instances[category], instance)
+    return instance
+end
+
+function memoryManager:cleanup(category)
+    if category then
+        if self.instances[category] then
+            for _, instance in ipairs(self.instances[category]) do
+                pcall(function() instance:Destroy() end)
+            end
+            self.instances[category] = {}
+        end
+    else
+        for category, instances in pairs(self.instances) do
+            for _, instance in ipairs(instances) do
+                pcall(function() instance:Destroy() end)
+            end
+        end
+        self.instances = {}
+    end
+end
+
+local function advancedTween(object, properties, duration, easingStyle, easingDirection)
+    local tweenInfo = TweenInfo.new(
+        duration or 0.2,
+        easingStyle or Enum.EasingStyle.Quad,
+        easingDirection or Enum.EasingDirection.Out
+    )
+    local tween = ts:Create(object, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
+local function createRippleEffect(button, color)
+    color = color or colorPalette.primary
+    local ripple = Instance.new("Frame")
+    ripple.Name = "RippleEffect"
+    ripple.BackgroundColor3 = color
+    ripple.BackgroundTransparency = 0.7
+    ripple.Size = UDim2.new(0, 0, 0, 0)
+    ripple.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ripple.AnchorPoint = Vector2.new(0.5, 0.5)
+    ripple.ZIndex = button.ZIndex + 1
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0)
+    corner.Parent = ripple
+    ripple.Parent = button
+    local tween1 = advancedTween(ripple, {
+        Size = UDim2.new(2, 0, 2, 0),
+        BackgroundTransparency = 1
+    }, 0.6)
+    tween1.Completed:Connect(function()
+        ripple:Destroy()
+    end)
+end
+
+local function applyAdvancedShadow(frame)
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "AdvancedShadow"
+    shadow.Image = "rbxassetid://5554236805"
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(23, 23, 277, 277)
+    shadow.BackgroundTransparency = 1
+    shadow.Size = UDim2.new(1, 24, 1, 24)
+    shadow.Position = UDim2.new(0, -12, 0, -12)
+    shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    shadow.ImageTransparency = 0.8
+    shadow.ZIndex = frame.ZIndex - 1
+    shadow.Parent = frame.Parent
+    return shadow
+end
+
+function singularitylibrary:window(params)
+    local window = {}
+    window.name = params.name
+
+    local singularity = {}
+    singularity["1"] = Instance.new("ScreenGui", game.CoreGui)
+    singularity["1"]["IgnoreGuiInset"] = true
+    singularity["1"]["ScreenInsets"] = Enum.ScreenInsets.DeviceSafeInsets
+    singularity["1"]["Name"] = "singularity"
+    singularity["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
+    singularity["1"]["ResetOnSpawn"] = false
+
+    singularity["2"] = Instance.new("Frame", singularity["1"])
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.background
+    singularity["2"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["2"]["Size"] = UDim2.new(0, 494, 0, 361)
+    singularity["2"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = "main"
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    applyAdvancedShadow(singularity["2"])
+
+    singularity["4"] = Instance.new("Frame", singularity["2"])
+    singularity["4"]["BorderSizePixel"] = 0
+    singularity["4"]["BackgroundColor3"] = colorPalette.surface
+    singularity["4"]["Size"] = UDim2.new(0, 494, 0, 50)
+    singularity["4"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["4"]["Name"] = "top"
+
+    singularity["5"] = Instance.new("UICorner", singularity["4"])
+    singularity["5"]["CornerRadius"] = UDim.new(0.35, 0)
+
+    singularity["6"] = Instance.new("Frame", singularity["4"])
+    singularity["6"]["BorderSizePixel"] = 0
+    singularity["6"]["BackgroundColor3"] = colorPalette.surface
+    singularity["6"]["Size"] = UDim2.new(0, 494, 0, 10)
+    singularity["6"]["Position"] = UDim2.new(0, 0, 0.8, 0)
+    singularity["6"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["6"]["Name"] = "below"
+
+    singularity["7"] = Instance.new("Frame", singularity["4"])
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["BackgroundColor3"] = colorPalette.accent
+    singularity["7"]["Size"] = UDim2.new(0, 494, 0, 1)
+    singularity["7"]["Position"] = UDim2.new(0, 0, 1, 0)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["Name"] = "bar"
+
+    singularity["8"] = Instance.new("TextLabel", singularity["4"])
+    singularity["8"]["BorderSizePixel"] = 0
+    singularity["8"]["TextSize"] = 14
+    singularity["8"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["8"]["TextYAlignment"] = Enum.TextYAlignment.Top
+    singularity["8"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["8"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["8"]["TextColor3"] = colorPalette.secondary
+    singularity["8"]["BackgroundTransparency"] = 1
+    singularity["8"]["RichText"] = true
+    singularity["8"]["Size"] = UDim2.new(0, 420, 0, 18)
+    singularity["8"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["8"]["Text"] = "singularity | example game"
+    singularity["8"]["Name"] = "title"
+    singularity["8"]["Position"] = UDim2.new(0.01822, 0, 0.2, 0)
+
+    singularity["9"] = Instance.new("LocalScript", singularity["8"])
+    singularity["9"]["Name"] = "script"
+
+    singularity["a"] = Instance.new("TextLabel", singularity["4"])
+    singularity["a"]["BorderSizePixel"] = 0
+    singularity["a"]["TextSize"] = 13
+    singularity["a"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["a"]["TextYAlignment"] = Enum.TextYAlignment.Top
+    singularity["a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["a"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["a"]["TextColor3"] = Color3.fromRGB(76, 76, 76)
+    singularity["a"]["BackgroundTransparency"] = 1
+    singularity["a"]["Size"] = UDim2.new(0, 420, 0, 22)
+    singularity["a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["a"]["Name"] = "by"
+    singularity["a"]["Position"] = UDim2.new(0.01822, 0, 0.56, 0)
+    singularity["a"]["Text"] = "by wxrp"
+
+    singularity["b"] = Instance.new("ImageLabel", singularity["4"])
+    singularity["b"]["BorderSizePixel"] = 0
+    singularity["b"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["b"]["ImageColor3"] = colorPalette.secondary
+    singularity["b"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["b"]["Image"] = "rbxassetid://10747384394"
+    singularity["b"]["Size"] = UDim2.new(0, 22, 0, 22)
+    singularity["b"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["b"]["BackgroundTransparency"] = 1
+    singularity["b"]["Name"] = "x"
+    singularity["b"]["Position"] = UDim2.new(0.96, 0, 0.5, 0)
+
+    singularity["c"] = Instance.new("UIAspectRatioConstraint", singularity["b"])
+
+    singularity["d"] = Instance.new("TextButton", singularity["b"])
+    singularity["d"]["BorderSizePixel"] = 0
+    singularity["d"]["TextSize"] = 14
+    singularity["d"]["AutoButtonColor"] = false
+    singularity["d"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["d"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["d"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["d"]["BackgroundTransparency"] = 1
+    singularity["d"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["d"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["d"]["Text"] = ""
+    singularity["d"]["Name"] = "trigger"
+
+    singularity["e"] = Instance.new("LocalScript", singularity["d"])
+    singularity["e"]["Name"] = "script"
+
+    singularity["f"] = Instance.new("ImageLabel", singularity["4"])
+    singularity["f"]["BorderSizePixel"] = 0
+    singularity["f"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["f"]["ImageColor3"] = colorPalette.secondary
+    singularity["f"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["f"]["Image"] = "rbxassetid://10734896206"
+    singularity["f"]["Size"] = UDim2.new(0, 22, 0, 22)
+    singularity["f"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["f"]["BackgroundTransparency"] = 1
+    singularity["f"]["Name"] = "minimize"
+    singularity["f"]["Position"] = UDim2.new(0.91, 0, 0.5, 0)
+
+    singularity["10"] = Instance.new("UIAspectRatioConstraint", singularity["f"])
+
+    singularity["11"] = Instance.new("TextButton", singularity["f"])
+    singularity["11"]["BorderSizePixel"] = 0
+    singularity["11"]["TextSize"] = 14
+    singularity["11"]["AutoButtonColor"] = false
+    singularity["11"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["11"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["11"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["11"]["BackgroundTransparency"] = 1
+    singularity["11"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["11"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["11"]["Text"] = ""
+    singularity["11"]["Name"] = "trigger"
+
+    singularity["12"] = Instance.new("LocalScript", singularity["11"])
+    singularity["12"]["Name"] = "script"
+
+    singularity["13"] = Instance.new("Frame", singularity["2"])
+    singularity["13"]["ZIndex"] = 0
+    singularity["13"]["BorderSizePixel"] = 0
+    singularity["13"]["BackgroundColor3"] = colorPalette.surface
+    singularity["13"]["Size"] = UDim2.new(0, 136, 0, 310)
+    singularity["13"]["Position"] = UDim2.new(0, 0, 0.141, 0)
+    singularity["13"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["13"]["Name"] = "left"
+
+    singularity["14"] = Instance.new("UICorner", singularity["13"])
+    singularity["14"]["CornerRadius"] = UDim.new(0.15, 0)
+
+    singularity["15"] = Instance.new("Frame", singularity["13"])
+    singularity["15"]["BorderSizePixel"] = 0
+    singularity["15"]["BackgroundColor3"] = colorPalette.surface
+    singularity["15"]["Size"] = UDim2.new(0, 136, 0, 25)
+    singularity["15"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["15"]["Name"] = "top"
+
+    singularity["16"] = Instance.new("Frame", singularity["13"])
+    singularity["16"]["BorderSizePixel"] = 0
+    singularity["16"]["BackgroundColor3"] = colorPalette.surface
+    singularity["16"]["Size"] = UDim2.new(0, 43, 0, 25)
+    singularity["16"]["Position"] = UDim2.new(0.68382, 0, 0.91935, 0)
+    singularity["16"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["16"]["Name"] = "right"
+
+    singularity["17"] = Instance.new("Frame", singularity["13"])
+    singularity["17"]["BorderSizePixel"] = 0
+    singularity["17"]["BackgroundColor3"] = colorPalette.accent
+    singularity["17"]["Size"] = UDim2.new(0, 1, 0, 310)
+    singularity["17"]["Position"] = UDim2.new(1, 0, 0, 0)
+    singularity["17"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["17"]["Name"] = "bar"
+
+    singularity["18"] = Instance.new("ScrollingFrame", singularity["13"])
+    singularity["18"]["Active"] = true
+    singularity["18"]["BorderSizePixel"] = 0
+    singularity["18"]["CanvasSize"] = UDim2.new(0, 0, 0, 0)
+    singularity["18"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["18"]["Name"] = "scroll"
+    singularity["18"]["AutomaticCanvasSize"] = Enum.AutomaticSize.Y
+    singularity["18"]["Size"] = UDim2.new(0, 136, 0, 302)
+    singularity["18"]["ScrollBarImageColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["18"]["Position"] = UDim2.new(0, 0, 0.0215, 0)
+    singularity["18"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["18"]["ScrollBarThickness"] = 0
+    singularity["18"]["BackgroundTransparency"] = 1
+
+    singularity["19"] = Instance.new("Frame", singularity["18"])
+    singularity["19"]["BorderSizePixel"] = 0
+    singularity["19"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["19"]["Size"] = UDim2.new(1, 0, 1.02282, 0)
+    singularity["19"]["Position"] = UDim2.new(0, 0, -0.011, 0)
+    singularity["19"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["19"]["Name"] = "layout"
+    singularity["19"]["BackgroundTransparency"] = 1
+
+    singularity["1a"] = Instance.new("UIListLayout", singularity["19"])
+    singularity["1a"]["Padding"] = UDim.new(0, 3)
+    singularity["1a"]["SortOrder"] = Enum.SortOrder.LayoutOrder
+
+    singularity["1b"] = Instance.new("Folder", singularity["2"])
+    singularity["1b"]["Name"] = "tabframes"
+
+    singularity["1c"] = Instance.new("LocalScript", singularity["2"])
+    singularity["1c"]["Name"] = "drag"
+
+    singularity["1d"] = Instance.new("Frame", singularity["1"])
+    singularity["1d"]["Visible"] = false
+    singularity["1d"]["Interactable"] = false
+    singularity["1d"]["BorderSizePixel"] = 0
+    singularity["1d"]["BackgroundColor3"] = colorPalette.background
+    singularity["1d"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["1d"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["1d"]["Name"] = "screen"
+    singularity["1d"]["BackgroundTransparency"] = 1
+
+    singularity["1e"] = Instance.new("Frame", singularity["1"])
+    singularity["1e"]["Visible"] = false
+    singularity["1e"]["Interactable"] = false
+    singularity["1e"]["BorderSizePixel"] = 0
+    singularity["1e"]["BackgroundColor3"] = Color3.fromRGB(21, 21, 21)
+    singularity["1e"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["1e"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+    singularity["1e"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["1e"]["Name"] = "closemenu"
+
+    singularity["1f"] = Instance.new("UICorner", singularity["1e"])
+    singularity["1f"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    singularity["20"] = Instance.new("TextLabel", singularity["1e"])
+    singularity["20"]["BorderSizePixel"] = 0
+    singularity["20"]["TextSize"] = 14
+    singularity["20"]["TextTransparency"] = 1
+    singularity["20"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["20"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["20"]["TextColor3"] = colorPalette.secondary
+    singularity["20"]["BackgroundTransparency"] = 1
+    singularity["20"]["Size"] = UDim2.new(0, 312, 0, 24)
+    singularity["20"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["20"]["Text"] = "are you sure you want to destroy the menu?"
+    singularity["20"]["Name"] = "message"
+    singularity["20"]["Position"] = UDim2.new(0, 0, 0.12628, 0)
+
+    singularity["21"] = Instance.new("Frame", singularity["1e"])
+    singularity["21"]["BorderSizePixel"] = 0
+    singularity["21"]["BackgroundColor3"] = colorPalette.background
+    singularity["21"]["Size"] = UDim2.new(0, 40, 0, 40)
+    singularity["21"]["Position"] = UDim2.new(0.13383, 0, 0.42456, 0)
+    singularity["21"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["21"]["Name"] = "check"
+    singularity["21"]["BackgroundTransparency"] = 1
+
+    singularity["22"] = Instance.new("UICorner", singularity["21"])
+    singularity["22"]["CornerRadius"] = UDim.new(0.08, 0)
+
+    singularity["23"] = Instance.new("UIStroke", singularity["21"])
+    singularity["23"]["Transparency"] = 1
+    singularity["23"]["Thickness"] = 0.9
+    singularity["23"]["Color"] = colorPalette.accent
+
+    singularity["24"] = Instance.new("ImageLabel", singularity["21"])
+    singularity["24"]["BorderSizePixel"] = 0
+    singularity["24"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["24"]["ImageTransparency"] = 1
+    singularity["24"]["ImageColor3"] = colorPalette.secondary
+    singularity["24"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["24"]["Image"] = "rbxassetid://10709790644"
+    singularity["24"]["Size"] = UDim2.new(0, 30, 0, 30)
+    singularity["24"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["24"]["BackgroundTransparency"] = 1
+    singularity["24"]["Name"] = "image"
+    singularity["24"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+
+    singularity["25"] = Instance.new("UIAspectRatioConstraint", singularity["24"])
+
+    singularity["26"] = Instance.new("TextButton", singularity["21"])
+    singularity["26"]["BorderSizePixel"] = 0
+    singularity["26"]["TextSize"] = 14
+    singularity["26"]["AutoButtonColor"] = false
+    singularity["26"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["26"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["26"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["26"]["BackgroundTransparency"] = 1
+    singularity["26"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["26"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["26"]["Text"] = ""
+    singularity["26"]["Name"] = "trigger"
+
+    singularity["27"] = Instance.new("LocalScript", singularity["26"])
+    singularity["27"]["Name"] = "script"
+
+    singularity["28"] = Instance.new("Frame", singularity["1e"])
+    singularity["28"]["BorderSizePixel"] = 0
+    singularity["28"]["BackgroundColor3"] = colorPalette.background
+    singularity["28"]["Size"] = UDim2.new(0, 40, 0, 40)
+    singularity["28"]["Position"] = UDim2.new(0.715, 0, 0.425, 0)
+    singularity["28"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["28"]["Name"] = "x"
+    singularity["28"]["BackgroundTransparency"] = 1
+
+    singularity["29"] = Instance.new("UICorner", singularity["28"])
+    singularity["29"]["CornerRadius"] = UDim.new(0.08, 0)
+
+    singularity["2a"] = Instance.new("UIStroke", singularity["28"])
+    singularity["2a"]["Transparency"] = 1
+    singularity["2a"]["Thickness"] = 0.9
+    singularity["2a"]["Color"] = colorPalette.accent
+
+    singularity["2b"] = Instance.new("ImageLabel", singularity["28"])
+    singularity["2b"]["BorderSizePixel"] = 0
+    singularity["2b"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["2b"]["ImageTransparency"] = 1
+    singularity["2b"]["ImageColor3"] = colorPalette.secondary
+    singularity["2b"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["2b"]["Image"] = "rbxassetid://10747384394"
+    singularity["2b"]["Size"] = UDim2.new(0, 30, 0, 30)
+    singularity["2b"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2b"]["BackgroundTransparency"] = 1
+    singularity["2b"]["Name"] = "image"
+    singularity["2b"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+
+    singularity["2c"] = Instance.new("UIAspectRatioConstraint", singularity["2b"])
+
+    singularity["2d"] = Instance.new("TextButton", singularity["28"])
+    singularity["2d"]["BorderSizePixel"] = 0
+    singularity["2d"]["TextSize"] = 14
+    singularity["2d"]["AutoButtonColor"] = false
+    singularity["2d"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2d"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["2d"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["2d"]["BackgroundTransparency"] = 1
+    singularity["2d"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["2d"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2d"]["Text"] = ""
+    singularity["2d"]["Name"] = "trigger"
+
+    singularity["2e"] = Instance.new("LocalScript", singularity["2d"])
+    singularity["2e"]["Name"] = "script"
+
+    singularity["2f"] = Instance.new("Frame", singularity["1"])
+    singularity["2f"]["Visible"] = false
+    singularity["2f"]["Interactable"] = false
+    singularity["2f"]["BorderSizePixel"] = 0
+    singularity["2f"]["BackgroundColor3"] = colorPalette.background
+    singularity["2f"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+    singularity["2f"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2f"]["Name"] = "minimizemenu"
+
+    singularity["30"] = Instance.new("UICorner", singularity["2f"])
+    singularity["30"]["CornerRadius"] = UDim.new(0.25, 0)
+
+    singularity["31"] = Instance.new("Frame", singularity["2f"])
+    singularity["31"]["BorderSizePixel"] = 0
+    singularity["31"]["BackgroundColor3"] = colorPalette.accent
+    singularity["31"]["Size"] = UDim2.new(0, 161, 0, 1)
+    singularity["31"]["Position"] = UDim2.new(0.06952, 0, 0.48529, 0)
+    singularity["31"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["31"]["Name"] = "bar"
+    singularity["31"]["BackgroundTransparency"] = 1
+
+    singularity["32"] = Instance.new("TextLabel", singularity["2f"])
+    singularity["32"]["BorderSizePixel"] = 0
+    singularity["32"]["TextSize"] = 14
+    singularity["32"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["32"]["TextTransparency"] = 1
+    singularity["32"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["32"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["32"]["TextColor3"] = colorPalette.secondary
+    singularity["32"]["BackgroundTransparency"] = 1
+    singularity["32"]["Size"] = UDim2.new(0, 95, 0, 34)
+    singularity["32"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["32"]["Text"] = "singularity"
+    singularity["32"]["Name"] = "title"
+    singularity["32"]["Position"] = UDim2.new(0.06952, 0, 0, 0)
+
+    singularity["33"] = Instance.new("ImageLabel", singularity["2f"])
+    singularity["33"]["BorderSizePixel"] = 0
+    singularity["33"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["33"]["ImageTransparency"] = 1
+    singularity["33"]["ImageColor3"] = colorPalette.secondary
+    singularity["33"]["Image"] = "rbxassetid://10723346553"
+    singularity["33"]["Size"] = UDim2.new(0, 18, 0, 18)
+    singularity["33"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["33"]["BackgroundTransparency"] = 1
+    singularity["33"]["Name"] = "expand"
+    singularity["33"]["Position"] = UDim2.new(0.83422, 0, 0.11765, 0)
+
+    singularity["34"] = Instance.new("UIAspectRatioConstraint", singularity["33"])
+
+    singularity["35"] = Instance.new("TextButton", singularity["33"])
+    singularity["35"]["BorderSizePixel"] = 0
+    singularity["35"]["TextSize"] = 14
+    singularity["35"]["AutoButtonColor"] = false
+    singularity["35"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["35"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["35"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["35"]["BackgroundTransparency"] = 1
+    singularity["35"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["35"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["35"]["Text"] = ""
+    singularity["35"]["Name"] = "trigger"
+
+    singularity["36"] = Instance.new("LocalScript", singularity["35"])
+    singularity["36"]["Name"] = "script"
+
+    singularity["37"] = Instance.new("TextLabel", singularity["2f"])
+    singularity["37"]["BorderSizePixel"] = 0
+    singularity["37"]["TextSize"] = 14
+    singularity["37"]["TextTransparency"] = 1
+    singularity["37"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["37"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["37"]["TextColor3"] = Color3.fromRGB(76, 76, 76)
+    singularity["37"]["BackgroundTransparency"] = 1
+    singularity["37"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["37"]["Size"] = UDim2.new(0, 161, 0, 20)
+    singularity["37"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["37"]["Text"] = "by wxrp"
+    singularity["37"]["Name"] = "by"
+    singularity["37"]["Position"] = UDim2.new(0.5, 0, 0.73, 0)
+
+    singularity["38"] = Instance.new("LocalScript", singularity["2f"])
+    singularity["38"]["Name"] = "drag"
+
+    local function C_9()
+        local script = singularity["9"]
+        script.Parent.Text = string.char(60,102,111,110,116,32,99,111,108,111,114,61,34,114,103,98,40,50,51,55,44,53,50,44,49,48,57,41,34,62).."singularity"..string.char(60,47,102,111,110,116,62,32,60,102,111,110,116,32,99,111,108,111,114,61,34,114,103,98,40,49,48,48,44,49,48,48,44,49,48,48,41,34,62).."| "..window.name..string.char(60,47,102,111,110,116,62)
+    end
+    task.spawn(C_9)
+
+    local function C_e()
+        local script = singularity["e"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseEnter:Connect(function()
+            createRippleEffect(script.Parent)
+            advancedTween(script.Parent.Parent, { ImageColor3 = colorPalette.primary }, 0.2)
+        end)
+
+        script.Parent.MouseLeave:Connect(function()
+            advancedTween(script.Parent.Parent, { ImageColor3 = colorPalette.secondary }, 0.2)
+        end)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            script.Parent.Parent.Parent.Parent.Parent.main.Interactable = false
+            script.Parent.Parent.Parent.Parent.Parent.screen.Visible = true
+            script.Parent.Parent.Parent.Parent.Parent.closemenu.Visible = true
+
+            advancedTween(game.Lighting.singularityblur, { Size = 20 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.screen, { BackgroundTransparency = 0.35 }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu, { Size = UDim2.new(0, 313, 0, 117) }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.message, { TextTransparency = 0 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.check, { BackgroundTransparency = 0 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.x, { BackgroundTransparency = 0 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.check.UIStroke, { Transparency = 0 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.x.UIStroke, { Transparency = 0 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.check.image, { ImageTransparency = 0 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.Parent.closemenu.x.image, { ImageTransparency = 0 }, 0.2)
+            singularitywait(0.2)
+            script.Parent.Parent.Parent.Parent.Parent.screen.Interactable = true
+            script.Parent.Parent.Parent.Parent.Parent.closemenu.Interactable = true
+        end)
+    end
+    task.spawn(C_e)
+
+    local function C_12()
+        local script = singularity["12"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseEnter:Connect(function()
+            createRippleEffect(script.Parent)
+            advancedTween(script.Parent.Parent, { ImageColor3 = colorPalette.primary }, 0.2)
+        end)
+
+        script.Parent.MouseLeave:Connect(function()
+            advancedTween(script.Parent.Parent, { ImageColor3 = colorPalette.secondary }, 0.2)
+        end)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            script.Parent.Parent.Parent.Parent.Parent.main.Interactable = false
+
+            for _, v in pairs(script.Parent.Parent.Parent.Parent.Parent.main:GetDescendants()) do
+                if v:IsA("Frame") and v.BackgroundTransparency ~= 1 then
+                    v:SetAttribute("backgroundtransparency", v.BackgroundTransparency)
+                    advancedTween(v, { BackgroundTransparency = 1 }, 0.2)
+                end
+
+                if v:IsA("TextLabel") and v.TextTransparency ~= 1 then
+                    v:SetAttribute("texttransparency", v.TextTransparency)
+                    advancedTween(v, { TextTransparency = 1 }, 0.2)
+                end
+
+                if v:IsA("ImageLabel") and v.ImageTransparency ~= 1 then
+                    v:SetAttribute("imagetransparency", v.ImageTransparency)
+                    advancedTween(v, { ImageTransparency = 1 }, 0.2)
+                end
+
+                if v:IsA("UIStroke") and v.Transparency ~= 1 then
+                    v:SetAttribute("transparency", v.Transparency)
+                    advancedTween(v, { Transparency = 1 }, 0.2)
+                end
+
+                if v:IsA("TextBox") and v.TextTransparency ~= 1 then
+                    v:SetAttribute("backgroundtransparency", v.BackgroundTransparency)
+                    v:SetAttribute("texttransparency", v.TextTransparency)
+                    advancedTween(v, { BackgroundTransparency = 1 }, 0.2)
+                    advancedTween(v, { TextTransparency = 1 }, 0.2)
+                end
+            end
+
+            singularitywait(0.2)
+
+            local maintween = advancedTween(script.Parent.Parent.Parent.Parent.Parent.main, { Size = UDim2.new(0, 0, 0, 0) }, 0.2)
+
+            maintween.Completed:Connect(function()
+                script.Parent.Parent.Parent.Parent.Parent.main.Visible = false
+                script.Parent.Parent.Parent.Parent.Parent.minimizemenu.Visible = true
+
+                advancedTween(script.Parent.Parent.Parent.Parent.Parent.minimizemenu, { Size = UDim2.new(0, 187, 0, 68) }, 0.2)
+                singularitywait(0.2)
+                advancedTween(script.Parent.Parent.Parent.Parent.Parent.minimizemenu.title, { TextTransparency = 0 }, 0.2)
+                advancedTween(script.Parent.Parent.Parent.Parent.Parent.minimizemenu.expand, { ImageTransparency = 0 }, 0.2)
+                advancedTween(script.Parent.Parent.Parent.Parent.Parent.minimizemenu.bar, { BackgroundTransparency = 0 }, 0.2)
+                advancedTween(script.Parent.Parent.Parent.Parent.Parent.minimizemenu.by, { TextTransparency = 0 }, 0.2)
+                singularitywait(0.2)
+                script.Parent.Parent.Parent.Parent.Parent.minimizemenu.Interactable = true
+            end)
+        end)
+    end
+    task.spawn(C_12)
+
+    local function C_1c()
+        local script = singularity["1c"]
+        local frame = script.Parent
+
+        local dragging = false
+        local draginput = nil
+        local dragstart = nil
+        local startpos = nil
+
+        local function update(input)
+            if not dragging or not input then return end
+            local delta = input.Position - dragstart
+            local newpos = UDim2.new(
+                startpos.X.Scale, startpos.X.Offset + delta.X,
+                startpos.Y.Scale, startpos.Y.Offset + delta.Y
+            )
+            advancedTween(frame, { Position = newpos }, 0.1)
+        end
+
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragstart = input.Position
+                startpos = frame.Position
+
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+
+        frame.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                draginput = input
+            end
+        end)
+
+        uis.InputChanged:Connect(function(input)
+            if input == draginput then
+                update(input)
+            end
+        end)
+    end
+    task.spawn(C_1c)
+
+    local function C_27()
+        local script = singularity["27"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseEnter:Connect(function()
+            createRippleEffect(script.Parent)
+            advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.primary }, 0.2)
+        end)
+
+        script.Parent.MouseLeave:Connect(function()
+            advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.secondary }, 0.2)
+        end)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            script.Parent.Parent.Parent.Parent.closemenu.Interactable = false
+            script.Parent.Parent.Parent.Parent.screen.Interactable = false
+
+            advancedTween(script.Parent.Parent.Parent.message, { TextTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.UIStroke, { Transparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.x.UIStroke, { Transparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.x, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.image, { ImageTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.x.image, { ImageTransparency = 1 }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.Parent, { Size = UDim2.new(0, 0, 0, 0) }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.screen, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(game.Lighting.singularityblur, { Size = 0 }, 0.2)
+            singularitywait(0.2)
+            script.Parent.Parent.Parent.Parent.closemenu.Visible = false
+            script.Parent.Parent.Parent.Parent.screen.Visible = false
+            for _, v in pairs(script.Parent.Parent.Parent.Parent.main:GetDescendants()) do
+                if v:IsA("Frame") and v.BackgroundTransparency ~= 1 then
+                    advancedTween(v, { BackgroundTransparency = 1 }, 0.2)
+                end
+
+                if v:IsA("TextLabel") and v.TextTransparency ~= 1 then
+                    advancedTween(v, { TextTransparency = 1 }, 0.2)
+                end
+
+                if v:IsA("ImageLabel") and v.ImageTransparency ~= 1 then
+                    advancedTween(v, { ImageTransparency = 1 }, 0.2)
+                end
+
+                if v:IsA("UIStroke") and v.Transparency ~= 1 then
+                    advancedTween(v, { Transparency = 1 }, 0.2)
+                end
+
+                if v:IsA("TextBox") and v.TextTransparency ~= 1 then
+                    advancedTween(v, { BackgroundTransparency = 1 }, 0.2)
+                    advancedTween(v, { TextTransparency = 1 }, 0.2)
+                end
+            end
+            singularitywait(0.2)
+            local maintween = advancedTween(script.Parent.Parent.Parent.Parent.main, { Size = UDim2.new(0, 0, 0, 0) }, 0.2)
+
+            maintween.Completed:Connect(function()
+                script.Parent.Parent.Parent.Parent:Destroy()
+                if game.Lighting:FindFirstChild("singularityblur") then
+                    blurloop:Disconnect()
+                    game.Lighting.singularityblur:Destroy()
+                end
+            end)
+        end)
+    end
+    task.spawn(C_27)
+
+    local function C_2e()
+        local script = singularity["2e"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseEnter:Connect(function()
+            createRippleEffect(script.Parent)
+            advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.primary }, 0.2)
+        end)
+
+        script.Parent.MouseLeave:Connect(function()
+            advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.secondary }, 0.2)
+        end)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            script.Parent.Parent.Parent.Parent.closemenu.Interactable = false
+            script.Parent.Parent.Parent.Parent.screen.Interactable = false
+
+            advancedTween(script.Parent.Parent.Parent.message, { TextTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.UIStroke, { Transparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.check.UIStroke, { Transparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.check, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.image, { ImageTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.check.image, { ImageTransparency = 1 }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.Parent, { Size = UDim2.new(0, 0, 0, 0) }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.Parent.Parent.screen, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(game.Lighting.singularityblur, { Size = 0 }, 0.2)
+            singularitywait(0.2)
+            script.Parent.Parent.Parent.Parent.closemenu.Visible = false
+            script.Parent.Parent.Parent.Parent.screen.Visible = false
+            singularitywait(0.1)
+            script.Parent.Parent.Parent.Parent.main.Interactable = true
+        end)
+    end
+    task.spawn(C_2e)
+
+    local function C_36()
+        local script = singularity["36"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseEnter:Connect(function()
+            createRippleEffect(script.Parent)
+            advancedTween(script.Parent.Parent, { ImageColor3 = colorPalette.primary }, 0.2)
+        end)
+
+        script.Parent.MouseLeave:Connect(function()
+            advancedTween(script.Parent.Parent, { ImageColor3 = colorPalette.secondary }, 0.2)
+        end)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            script.Parent.Parent.Parent.Interactable = false
+
+            advancedTween(script.Parent.Parent.Parent.title, { TextTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.expand, { ImageTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.bar, { BackgroundTransparency = 1 }, 0.2)
+            advancedTween(script.Parent.Parent.Parent.by, { TextTransparency = 1 }, 0.2)
+            singularitywait(0.2)
+            local minimizetween = advancedTween(script.Parent.Parent.Parent, { Size = UDim2.new(0, 0, 0, 0) }, 0.2)
+
+            minimizetween.Completed:Connect(function()
+                script.Parent.Parent.Parent.Parent.main.Visible = true
+
+                advancedTween(script.Parent.Parent.Parent.Parent.main, { Size = UDim2.new(0, 494, 0, 361) }, 0.2)
+                singularitywait(0.2)
+                for _, v in pairs(script.Parent.Parent.Parent.Parent.main:GetDescendants()) do
+                    if v:IsA("Frame") and v:GetAttribute("backgroundtransparency") ~= nil then
+                        advancedTween(v, { BackgroundTransparency = v:GetAttribute("backgroundtransparency") }, 0.2)
+                        v:SetAttribute("backgroundtransparency", nil)
+                    end
+
+                    if v:IsA("TextLabel") and v:GetAttribute("texttransparency") ~= nil then
+                        advancedTween(v, { TextTransparency = v:GetAttribute("texttransparency") }, 0.2)
+                        v:SetAttribute("texttransparency", nil)
+                    end
+
+                    if v:IsA("ImageLabel") and v:GetAttribute("imagetransparency") ~= nil then
+                        advancedTween(v, { ImageTransparency = v:GetAttribute("imagetransparency") }, 0.2)
+                        v:SetAttribute("imagetransparency", nil)
+                    end
+
+                    if v:IsA("UIStroke") and v:GetAttribute("transparency") ~= nil then
+                        advancedTween(v, { Transparency = v:GetAttribute("transparency") }, 0.2)
+                        v:SetAttribute("transparency", nil)
+                    end
+
+                    if v:IsA("TextBox") and v:GetAttribute("texttransparency") ~= nil then
+                        advancedTween(v, { TextTransparency = v:GetAttribute("texttransparency") }, 0.2)
+                        advancedTween(v, { BackgroundTransparency = v:GetAttribute("backgroundtransparency") }, 0.2)
+                        v:SetAttribute("texttransparency", nil)
+                        v:SetAttribute("backgroundtransparency", nil)
+                    end
+                end
+                singularitywait(0.2)
+                script.Parent.Parent.Parent.Parent.main.Interactable = true
+            end)
+        end)
+    end
+    task.spawn(C_36)
+
+    local function C_38()
+        local script = singularity["38"]
+        local frame = script.Parent
+
+        local dragging = false
+        local draginput = nil
+        local dragstart = nil
+        local startpos = nil
+
+        local function update(input)
+            if not dragging or not input then return end
+            local delta = input.Position - dragstart
+            local newpos = UDim2.new(
+                startpos.X.Scale, startpos.X.Offset + delta.X,
+                startpos.Y.Scale, startpos.Y.Offset + delta.Y
+            )
+            advancedTween(frame, { Position = newpos }, 0.1)
+        end
+
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragstart = input.Position
+                startpos = frame.Position
+
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+
+        frame.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                draginput = input
+            end
+        end)
+
+        uis.InputChanged:Connect(function(input)
+            if input == draginput then
+                update(input)
+            end
+        end)
+    end
+    task.spawn(C_38)
+
+    local blur = Instance.new("BlurEffect")
+    blur.Name = "singularityblur"
+    blur.Parent = game.Lighting
+    blur.Size = 0
+    blur.Enabled = true
+
+    blurloop = game.Lighting.ChildRemoved:Connect(function(child)
+        if child.Name == "singularityblur" then
+            local blur = Instance.new("BlurEffect")
+            blur.Name = "singularityblur"
+            blur.Parent = game.Lighting
+            blur.Size = child.Size
+            blur.Enabled = true
+        end
+    end)
+
+    memoryManager:track(singularity["1"], "window")
+    return window
+end
+
+function singularitylibrary:tab(params)
+    local tab = {}
+    tab.name = params.name
+    tab.image = params.image
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity.main.left.scroll.layout)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = Color3.fromRGB(6, 6, 6)
+    singularity["2"]["Size"] = UDim2.new(0, 137, 0, 26)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = tab.name
+    singularity["2"]["BackgroundTransparency"] = 1
+    singularity["2"]:SetAttribute("browsing", false)
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.15, 0)
+
+    singularity["4"] = Instance.new("ImageLabel", singularity["2"])
+    singularity["4"]["BorderSizePixel"] = 0
+    singularity["4"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["4"]["ImageColor3"] = colorPalette.secondary
+    singularity["4"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["4"]["Image"] = tab.image
+    singularity["4"]["Size"] = UDim2.new(0, 18, 0, 18)
+    singularity["4"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["4"]["BackgroundTransparency"] = 1
+    singularity["4"]["Name"] = "image"
+    singularity["4"]["Position"] = UDim2.new(0.13, 0, 0.5, 0)
+
+    singularity["5"] = Instance.new("UIAspectRatioConstraint", singularity["4"])
+
+    singularity["6"] = Instance.new("TextLabel", singularity["2"])
+    singularity["6"]["BorderSizePixel"] = 0
+    singularity["6"]["TextSize"] = 14
+    singularity["6"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["6"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["6"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["6"]["TextColor3"] = colorPalette.secondary
+    singularity["6"]["BackgroundTransparency"] = 1
+    singularity["6"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["6"]["Size"] = UDim2.new(0.72566, 0, 0.58065, 0)
+    singularity["6"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["6"]["Text"] = tab.name
+    singularity["6"]["Name"] = "title"
+    singularity["6"]["Position"] = UDim2.new(0.615, 0, 0.5, 0)
+
+    singularity["7"] = Instance.new("TextButton", singularity["2"])
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["TextSize"] = 14
+    singularity["7"]["AutoButtonColor"] = false
+    singularity["7"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["7"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["7"]["BackgroundTransparency"] = 1
+    singularity["7"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["Text"] = ""
+    singularity["7"]["Name"] = "trigger"
+
+    singularity["8"] = Instance.new("LocalScript", singularity["7"])
+    singularity["8"]["Name"] = "script"
+
+    singularity["9"] = Instance.new("ScrollingFrame", game.CoreGui.singularity.main.tabframes)
+    singularity["9"]["Visible"] = false
+    singularity["9"]["Active"] = true
+    singularity["9"]["Interactable"] = false
+    singularity["9"]["BorderSizePixel"] = 0
+    singularity["9"]["CanvasSize"] = UDim2.new(0, 0, 0, 0)
+    singularity["9"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["9"]["Name"] = tab.name
+    singularity["9"]["AutomaticCanvasSize"] = Enum.AutomaticSize.Y
+    singularity["9"]["ClipsDescendants"] = true
+    singularity["9"]["Size"] = UDim2.new(0, 357, 0, 295)
+    singularity["9"]["ScrollBarImageColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["9"]["Position"] = UDim2.new(0.27733, 0, 0.16343, 0)
+    singularity["9"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["9"]["ScrollBarThickness"] = 0
+    singularity["9"]["BackgroundTransparency"] = 1
+
+    singularity["a"] = Instance.new("Frame", singularity["9"])
+    singularity["a"]["BorderSizePixel"] = 0
+    singularity["a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["a"]["Size"] = UDim2.new(1, 0, 0.99693, 0)
+    singularity["a"]["Position"] = UDim2.new(0, 0, 0.00307, 0)
+    singularity["a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["a"]["Name"] = "layout"
+    singularity["a"]["BackgroundTransparency"] = 1
+
+    singularity["b"] = Instance.new("UIListLayout", singularity["a"])
+    singularity["b"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Center
+    singularity["b"]["Padding"] = UDim.new(0, 9)
+    singularity["b"]["SortOrder"] = Enum.SortOrder.LayoutOrder
+
+    singularity["c"] = Instance.new("LocalScript", singularity["a"])
+    singularity["c"]["Name"] = "script"
+
+    local function C_5()
+        local script = singularity["c"]
+        singularitywait(1)
+        script.Parent.Parent.CanvasSize = UDim2.new(0, 0, 0, script.Parent.UIListLayout.AbsoluteContentSize.Y + 3)
+    end
+    task.spawn(C_5)
+
+    local function C_8()
+        local script = singularity["8"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        local function hasproperty(object, propertyname)
+            local success, _ = pcall(function()
+                object[propertyname] = object[propertyname]
+            end)
+            return success
+        end
+
+        script.Parent.MouseButton1Down:Connect(function()
+            createRippleEffect(script.Parent)
+            
+            if script.Parent.Parent:GetAttribute("browsing") == false then
+                script.Parent.Parent:SetAttribute("browsing", true)
+                advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.primary }, 0.2)
+                advancedTween(script.Parent.Parent.title, { TextColor3 = colorPalette.primary }, 0.2)
+            end
+
+            for _, v in pairs(script.Parent.Parent.Parent:GetChildren()) do
+                if not v:IsA("UIListLayout") then
+                    if v.Name ~= script.Parent.Parent.Name then
+                        v:SetAttribute("browsing", false)
+                        advancedTween(v.image, { ImageColor3 = colorPalette.secondary }, 0.2)
+                        advancedTween(v.title, { TextColor3 = colorPalette.secondary }, 0.2)
+                    end
+                end
+            end
+
+            script.Parent.Parent.Parent.Parent.Parent.Parent.tabframes[script.Parent.Parent.Name].Visible = true
+
+            for _, v in pairs(script.Parent.Parent.Parent.Parent.Parent.Parent.tabframes[script.Parent.Parent.Name].layout:GetChildren()) do
+                if v:IsA("Frame") then
+                    advancedTween(v, { BackgroundTransparency = 0 }, 0.2)
+                    advancedTween(v.UIStroke, { Transparency = 0 }, 0.2)
+
+                    if v:FindFirstChild("title") then
+                        advancedTween(v.title, { TextTransparency = 0 }, 0.2)
+                    end
+
+                    if v:FindFirstChild("message") then
+                        advancedTween(v.message, { TextTransparency = 0 }, 0.2)
+                    end
+
+                    if v:FindFirstChild("image") then
+                        advancedTween(v.image, { ImageTransparency = 0 }, 0.2)
+                    end
+
+                    if v:FindFirstChild("toggle") then
+                        advancedTween(v.toggle.UIStroke, { Transparency = 0 }, 0.2)
+
+                        if v.toggle:GetAttribute("toggled") == true then
+                            advancedTween(v.toggle.image, { ImageTransparency = 0 }, 0.2)
+                        else
+                            advancedTween(v.toggle.image, { ImageTransparency = 1 }, 0.2)
+                        end
+                    end
+
+                    if v:FindFirstChild("slider") then
+                        advancedTween(v.slider.UIStroke, { Transparency = 0 }, 0.2)
+                        advancedTween(v.slider.fill, { BackgroundTransparency = 0 }, 0.2)
+                        advancedTween(v.slider.amount, { TextTransparency = 0 }, 0.2)
+                    end
+
+                    if v:FindFirstChild("box") then
+                        advancedTween(v.box, { TextTransparency = 0 }, 0.2)
+                        advancedTween(v.box.UIStroke, { Transparency = 0 }, 0.2)
+                    end
+                end
+            end
+
+            for _, v2 in pairs(script.Parent.Parent.Parent.Parent.Parent.Parent.tabframes:GetChildren()) do
+                if v2.Name ~= script.Parent.Parent.Name then
+                    for _, v in pairs(v2.layout:GetChildren()) do
+                        if v:IsA("Frame") then
+                            advancedTween(v, { BackgroundTransparency = 1 }, 0.2)
+                            advancedTween(v.UIStroke, { Transparency = 1 }, 0.2)
+
+                            if v:FindFirstChild("title") then
+                                advancedTween(v.title, { TextTransparency = 1 }, 0.2)
+                            end
+
+                            if v:FindFirstChild("message") then
+                                advancedTween(v.message, { TextTransparency = 1 }, 0.2)
+                            end
+
+                            if v:FindFirstChild("image") then
+                                advancedTween(v.image, { ImageTransparency = 1 }, 0.2)
+                            end
+
+                            if v:FindFirstChild("toggle") then
+                                advancedTween(v.toggle.UIStroke, { Transparency = 1 }, 0.2)
+
+                                if v.toggle:GetAttribute("toggled") == true then
+                                    advancedTween(v.toggle.image, { ImageTransparency = 1 }, 0.2)
+                                else
+                                    advancedTween(v.toggle.image, { ImageTransparency = 1 }, 0.2)
+                                end
+                            end
+
+                            if v:FindFirstChild("slider") then
+                                advancedTween(v.slider.UIStroke, { Transparency = 1 }, 0.2)
+                                advancedTween(v.slider.fill, { BackgroundTransparency = 1 }, 0.2)
+                                advancedTween(v.slider.amount, { TextTransparency = 1 }, 0.2)
+                            end
+
+                            if v:FindFirstChild("box") then
+                                advancedTween(v.box, { TextTransparency = 1 }, 0.2)
+                                advancedTween(v.box.UIStroke, { Transparency = 1 }, 0.2)
+                            end
+                        end
+                    end
+                end
+            end
+
+            for _, v in pairs(script.Parent.Parent.Parent.Parent.Parent.Parent.tabframes:GetChildren()) do
+                if v.Name ~= script.Parent.Parent.Name then
+                    v.Interactable = false
+                    v.Visible = false
+                end
+            end
+
+            singularitywait(0.2)
+            script.Parent.Parent.Parent.Parent.Parent.Parent.tabframes[script.Parent.Parent.Name].Interactable = true
+        end)
+    end
+    task.spawn(C_8)
+
+    memoryManager:track(singularity["2"], "tabs")
+    memoryManager:track(singularity["9"], "tabframes")
+    return tab
+end
+
+function singularitylibrary:button(params)
+    local button = {}
+    button.name = params.name
+    button.parent = params.parent
+    button.callback = params.callback
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity.main.tabframes[button.parent].layout)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.surface
+    singularity["2"]["ClipsDescendants"] = true
+    singularity["2"]["Size"] = UDim2.new(0, 333, 0, 41)
+    singularity["2"]["Position"] = UDim2.new(0.03361, 0, 0, 0)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = button.name
+    singularity["2"]["BackgroundTransparency"] = 1
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    singularity["4"] = Instance.new("UIStroke", singularity["2"])
+    singularity["4"]["Transparency"] = 1
+    singularity["4"]["Thickness"] = 0.9
+    singularity["4"]["Color"] = colorPalette.accent
+
+    singularity["5"] = Instance.new("TextLabel", singularity["2"])
+    singularity["5"]["TextWrapped"] = true
+    singularity["5"]["BorderSizePixel"] = 0
+    singularity["5"]["TextSize"] = 14
+    singularity["5"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["5"]["TextTransparency"] = 1
+    singularity["5"]["TextScaled"] = true
+    singularity["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["5"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["5"]["TextColor3"] = colorPalette.secondary
+    singularity["5"]["BackgroundTransparency"] = 1
+    singularity["5"]["Size"] = UDim2.new(0.84847, 0, 1, 0)
+    singularity["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["Text"] = button.name
+    singularity["5"]["Name"] = "title"
+    singularity["5"]["Position"] = UDim2.new(0.02102, 0, 0, 0)
+
+    singularity["6"] = Instance.new("UITextSizeConstraint", singularity["5"])
+    singularity["6"]["MaxTextSize"] = 14
+    singularity["6"]["MinTextSize"] = 12
+
+    singularity["7"] = Instance.new("ImageLabel", singularity["2"])
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["7"]["ImageTransparency"] = 1
+    singularity["7"]["ImageColor3"] = colorPalette.secondary
+    singularity["7"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["7"]["Image"] = "rbxassetid://10723375250"
+    singularity["7"]["Size"] = UDim2.new(0, 25, 0, 25)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["BackgroundTransparency"] = 1
+    singularity["7"]["Name"] = "image"
+    singularity["7"]["Position"] = UDim2.new(0.94, 0, 0.5, 0)
+
+    singularity["8"] = Instance.new("UIAspectRatioConstraint", singularity["7"])
+
+    singularity["9"] = Instance.new("TextButton", singularity["2"])
+    singularity["9"]["BorderSizePixel"] = 0
+    singularity["9"]["TextSize"] = 14
+    singularity["9"]["AutoButtonColor"] = false
+    singularity["9"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["9"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["9"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["9"]["BackgroundTransparency"] = 1
+    singularity["9"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["9"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["9"]["Text"] = ""
+    singularity["9"]["Name"] = "trigger"
+
+    singularity["a"] = Instance.new("LocalScript", singularity["9"])
+    singularity["a"]["Name"] = "script"
+
+    local function C_a()
+        local script = singularity["a"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            createRippleEffect(script.Parent)
+            advancedTween(script.Parent.Parent.title, { TextColor3 = colorPalette.primary }, 0.2)
+            advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.primary }, 0.2)
+            singularitywait(0.2)
+            advancedTween(script.Parent.Parent.title, { TextColor3 = colorPalette.secondary }, 0.2)
+            advancedTween(script.Parent.Parent.image, { ImageColor3 = colorPalette.secondary }, 0.2)
+
+            button.callback()
+        end)
+    end
+    task.spawn(C_a)
+
+    memoryManager:track(singularity["2"], "buttons")
+    return button
+end
+
+function singularitylibrary:toggle(params)
+    local toggle = {}
+    toggle.name = params.name
+    toggle.parent = params.parent
+    toggle.callback = params.callback
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity.main.tabframes[toggle.parent].layout)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.surface
+    singularity["2"]["ClipsDescendants"] = true
+    singularity["2"]["Size"] = UDim2.new(0, 333, 0, 41)
+    singularity["2"]["Position"] = UDim2.new(0.03361, 0, 0, 0)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = toggle.name
+    singularity["2"]["BackgroundTransparency"] = 1
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    singularity["4"] = Instance.new("UIStroke", singularity["2"])
+    singularity["4"]["Transparency"] = 1
+    singularity["4"]["Thickness"] = 0.9
+    singularity["4"]["Color"] = colorPalette.accent
+
+    singularity["5"] = Instance.new("TextLabel", singularity["2"])
+    singularity["5"]["TextWrapped"] = true
+    singularity["5"]["BorderSizePixel"] = 0
+    singularity["5"]["TextSize"] = 14
+    singularity["5"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["5"]["TextTransparency"] = 1
+    singularity["5"]["TextScaled"] = true
+    singularity["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["5"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["5"]["TextColor3"] = colorPalette.secondary
+    singularity["5"]["BackgroundTransparency"] = 1
+    singularity["5"]["Size"] = UDim2.new(0.84847, 0, 1, 0)
+    singularity["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["Text"] = toggle.name
+    singularity["5"]["Name"] = "title"
+    singularity["5"]["Position"] = UDim2.new(0.02102, 0, 0, 0)
+
+    singularity["6"] = Instance.new("UITextSizeConstraint", singularity["5"])
+    singularity["6"]["MaxTextSize"] = 14
+    singularity["6"]["MinTextSize"] = 12
+
+    singularity["7"] = Instance.new("Frame", singularity["2"])
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["BackgroundColor3"] = colorPalette.background
+    singularity["7"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["7"]["Size"] = UDim2.new(0, 25, 0, 25)
+    singularity["7"]["Position"] = UDim2.new(0.935, 0, 0.5, 0)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["Name"] = "toggle"
+    singularity["7"]:SetAttribute("toggled", false)
+
+    singularity["8"] = Instance.new("UIStroke", singularity["7"])
+    singularity["8"]["Transparency"] = 1
+    singularity["8"]["Thickness"] = 0.9
+    singularity["8"]["Color"] = colorPalette.accent
+
+    singularity["9"] = Instance.new("UICorner", singularity["7"])
+    singularity["9"]["CornerRadius"] = UDim.new(0.08, 0)
+
+    singularity["a"] = Instance.new("ImageLabel", singularity["7"])
+    singularity["a"]["BorderSizePixel"] = 0
+    singularity["a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["a"]["ImageTransparency"] = 1
+    singularity["a"]["ImageColor3"] = colorPalette.secondary
+    singularity["a"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["a"]["Image"] = "rbxassetid://10709790644"
+    singularity["a"]["Size"] = UDim2.new(0, 20, 0, 20)
+    singularity["a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["a"]["BackgroundTransparency"] = 1
+    singularity["a"]["Name"] = "image"
+    singularity["a"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+
+    singularity["b"] = Instance.new("UIAspectRatioConstraint", singularity["a"])
+
+    singularity["c"] = Instance.new("TextButton", singularity["7"])
+    singularity["c"]["BorderSizePixel"] = 0
+    singularity["c"]["TextSize"] = 14
+    singularity["c"]["AutoButtonColor"] = false
+    singularity["c"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["c"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["c"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["c"]["BackgroundTransparency"] = 1
+    singularity["c"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["c"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["c"]["Text"] = ""
+    singularity["c"]["Name"] = "trigger"
+
+    singularity["d"] = Instance.new("LocalScript", singularity["c"])
+    singularity["d"]["Name"] = "script"
+
+    local function C_d()
+        local script = singularity["d"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local state = false
+
+        script.Parent.MouseButton1Down:Connect(function()
+            createRippleEffect(script.Parent)
+            state = not state
+            if script.Parent.Parent:GetAttribute("toggled") == false then
+                script.Parent.Parent:SetAttribute("toggled", true)
+                advancedTween(script.Parent.Parent.image, { ImageTransparency = 0 }, 0.2)
+            else
+                script.Parent.Parent:SetAttribute("toggled", false)
+                advancedTween(script.Parent.Parent.image, { ImageTransparency = 1 }, 0.2)
+            end
+
+            toggle.callback(state)
+        end)
+    end
+    task.spawn(C_d)
+
+    memoryManager:track(singularity["2"], "toggles")
+    return toggle
+end
+
+function singularitylibrary:slider(params)
+    local slidersng = {}
+    slidersng.name = params.name
+    slidersng.starting = params.starting
+    slidersng.min = params.min
+    slidersng.max = params.max
+    slidersng.parent = params.parent
+    slidersng.callback = params.callback
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity.main.tabframes[slidersng.parent].layout)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.surface
+    singularity["2"]["ClipsDescendants"] = true
+    singularity["2"]["Size"] = UDim2.new(0, 333, 0, 41)
+    singularity["2"]["Position"] = UDim2.new(0.03361, 0, 0, 0)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = slidersng.name
+    singularity["2"]["BackgroundTransparency"] = 1
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    singularity["4"] = Instance.new("UIStroke", singularity["2"])
+    singularity["4"]["Transparency"] = 1
+    singularity["4"]["Thickness"] = 0.9
+    singularity["4"]["Color"] = colorPalette.accent
+
+    singularity["5"] = Instance.new("TextLabel", singularity["2"])
+    singularity["5"]["TextWrapped"] = true
+    singularity["5"]["BorderSizePixel"] = 0
+    singularity["5"]["TextSize"] = 14
+    singularity["5"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["5"]["TextTransparency"] = 1
+    singularity["5"]["TextScaled"] = true
+    singularity["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["5"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["5"]["TextColor3"] = colorPalette.secondary
+    singularity["5"]["BackgroundTransparency"] = 1
+    singularity["5"]["Size"] = UDim2.new(0.45902, 0, 1, 0)
+    singularity["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["Text"] = slidersng.name
+    singularity["5"]["Name"] = "title"
+    singularity["5"]["Position"] = UDim2.new(0.02102, 0, 0, 0)
+
+    singularity["6"] = Instance.new("UITextSizeConstraint", singularity["5"])
+    singularity["6"]["MaxTextSize"] = 14
+    singularity["6"]["MinTextSize"] = 12
+
+    singularity["7"] = Instance.new("Frame", singularity["2"])
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["BackgroundColor3"] = colorPalette.background
+    singularity["7"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["7"]["Size"] = UDim2.new(0, 120, 0, 15)
+    singularity["7"]["Position"] = UDim2.new(0.79236, 0, 0.5, 0)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["Name"] = "slider"
+
+    singularity["8"] = Instance.new("UICorner", singularity["7"])
+    singularity["8"]["CornerRadius"] = UDim.new(0.08, 0)
+
+    singularity["9"] = Instance.new("UIStroke", singularity["7"])
+    singularity["9"]["Transparency"] = 1
+    singularity["9"]["Thickness"] = 0.9
+    singularity["9"]["Color"] = colorPalette.accent
+
+    singularity["a"] = Instance.new("TextLabel", singularity["7"])
+    singularity["a"]["TextWrapped"] = true
+    singularity["a"]["BorderSizePixel"] = 0
+    singularity["a"]["TextSize"] = 14
+    singularity["a"]["TextXAlignment"] = Enum.TextXAlignment.Right
+    singularity["a"]["TextTransparency"] = 1
+    singularity["a"]["TextScaled"] = true
+    singularity["a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["a"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["a"]["TextColor3"] = colorPalette.secondary
+    singularity["a"]["BackgroundTransparency"] = 1
+    singularity["a"]["Size"] = UDim2.new(0.33731, 0, 1, 0)
+    singularity["a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["a"]["Text"] = "0%"
+    singularity["a"]["Name"] = "amount"
+    singularity["a"]["Position"] = UDim2.new(-0.36667, 0, 0, 0)
+
+    singularity["b"] = Instance.new("UITextSizeConstraint", singularity["a"])
+    singularity["b"]["MaxTextSize"] = 14
+    singularity["b"]["MinTextSize"] = 12
+
+    singularity["c"] = Instance.new("Frame", singularity["7"])
+    singularity["c"]["BorderSizePixel"] = 0
+    singularity["c"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51)
+    singularity["c"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["c"]["Name"] = "fill"
+
+    singularity["d"] = Instance.new("UICorner", singularity["c"])
+    singularity["d"]["CornerRadius"] = UDim.new(0.08, 0)
+
+    singularity["e"] = Instance.new("NumberValue", singularity["7"])
+    singularity["e"]["Name"] = "actualvalue"
+
+    singularity["f"] = Instance.new("LocalScript", singularity["7"])
+    singularity["f"]["Name"] = "script"
+
+    singularity["10"] = Instance.new("TextButton", singularity["7"])
+    singularity["10"]["BorderSizePixel"] = 0
+    singularity["10"]["TextSize"] = 14
+    singularity["10"]["AutoButtonColor"] = false
+    singularity["10"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["10"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["10"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["10"]["BackgroundTransparency"] = 1
+    singularity["10"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["10"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["10"]["Text"] = ""
+    singularity["10"]["Name"] = "trigger"
+
+    local function C_f()
+        local script = singularity["f"]
+        local slider = script.Parent
+        local fill = slider.fill
+        local trigger = slider.trigger
+        local amount = slider.amount
+        local actualvalue = slider.actualvalue
+
+        local min_value = slidersng.min
+        local max_value = slidersng.max
+        local starting_value = slidersng.starting
+
+        local isdragging = false
+        local runservice = game:GetService("RunService")
+
+        local function updateslider(value)
+            value = math.max(min_value, math.min(max_value, value))
+            local percentage = (value - min_value) / (max_value - min_value)
+            local filltween = advancedTween(fill, { Size = UDim2.new(percentage, 0, 1, 0) }, 0.1)
+            filltween:Play()
+            amount.Text = math.floor(value) .. "%"
+            actualvalue.Value = value
+        end
+
+        local function getvaluefromposition(inputx)
+            local sliderposition = slider.AbsolutePosition.X
+            local slidersize = slider.AbsoluteSize.X
+            local relativex = inputx - sliderposition
+            local percentage = math.max(0, math.min(1, relativex / slidersize))
+            local value = min_value + (percentage * (max_value - min_value))
+            return value
+        end
+
+        trigger.MouseButton1Down:Connect(function()
+            isdragging = true
+        end)
+
+        trigger.MouseButton1Up:Connect(function()
+            isdragging = false
+        end)
+
+        local connection
+        local function startdragging()
+            if connection then
+                connection:Disconnect()
+            end
+
+            connection = runservice.Heartbeat:Connect(function()
+                if isdragging then
+                    local mouse = game.Players.LocalPlayer:GetMouse()
+                    local newvalue = getvaluefromposition(mouse.X)
+                    updateslider(newvalue)
+                end
+            end)
+        end
+
+        trigger.MouseButton1Down:Connect(startdragging)
+
+        trigger.TouchTap:Connect(function(touch, processed)
+            if not processed then
+                local newvalue = getvaluefromposition(touch.Position.X)
+                updateslider(newvalue)
+            end
+        end)
+
+        trigger.TouchPan:Connect(function(touch, totaltranslation, velocity, state, processed)
+            if not processed then
+                if state == Enum.UserInputState.Begin then
+                    isdragging = true
+                    startdragging()
+                elseif state == Enum.UserInputState.End then
+                    isdragging = false
+                end
+
+                if state == Enum.UserInputState.Change then
+                    local newvalue = getvaluefromposition(touch.Position.X)
+                    updateslider(newvalue)
+                end
+            end
+        end)
+
+        uis.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or
+                input.UserInputType == Enum.UserInputType.Touch then
+                isdragging = false
+                if connection then
+                    connection:Disconnect()
+                end
+            end
+        end)
+
+        trigger.MouseButton1Down:Connect(function()
+            local mouse = game.Players.LocalPlayer:GetMouse()
+            local newvalue = getvaluefromposition(mouse.X)
+            updateslider(newvalue)
+        end)
+
+        updateslider(starting_value)
+
+        actualvalue:GetPropertyChangedSignal("Value"):Connect(function()
+            slidersng.callback(actualvalue.Value)
+        end)
+    end
+    task.spawn(C_f)
+
+    memoryManager:track(singularity["2"], "sliders")
+    return slider
+end
+
+function singularitylibrary:textbox(params)
+    local textbox = {}
+    textbox.name = params.name
+    textbox.parent = params.parent
+    textbox.callback = params.callback
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity.main.tabframes[textbox.parent].layout)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.surface
+    singularity["2"]["ClipsDescendants"] = true
+    singularity["2"]["Size"] = UDim2.new(0, 333, 0, 41)
+    singularity["2"]["Position"] = UDim2.new(0.03361, 0, 0, 0)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = textbox.name
+    singularity["2"]["BackgroundTransparency"] = 1
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    singularity["4"] = Instance.new("UIStroke", singularity["2"])
+    singularity["4"]["Transparency"] = 1
+    singularity["4"]["Thickness"] = 0.9
+    singularity["4"]["Color"] = colorPalette.accent
+
+    singularity["5"] = Instance.new("TextLabel", singularity["2"])
+    singularity["5"]["TextWrapped"] = true
+    singularity["5"]["BorderSizePixel"] = 0
+    singularity["5"]["TextSize"] = 14
+    singularity["5"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["5"]["TextTransparency"] = 1
+    singularity["5"]["TextScaled"] = true
+    singularity["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["5"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["5"]["TextColor3"] = colorPalette.secondary
+    singularity["5"]["BackgroundTransparency"] = 1
+    singularity["5"]["Size"] = UDim2.new(0.45902, 0, 1, 0)
+    singularity["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["Text"] = textbox.name
+    singularity["5"]["Name"] = "title"
+    singularity["5"]["Position"] = UDim2.new(0.02102, 0, 0, 0)
+
+    singularity["6"] = Instance.new("UITextSizeConstraint", singularity["5"])
+    singularity["6"]["MaxTextSize"] = 14
+    singularity["6"]["MinTextSize"] = 12
+
+    singularity["7"] = Instance.new("TextBox", singularity["2"])
+    singularity["7"]["Name"] = "box"
+    singularity["7"]["PlaceholderColor3"] = Color3.fromRGB(51, 51, 51)
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["TextWrapped"] = true
+    singularity["7"]["TextTransparency"] = 1
+    singularity["7"]["TextSize"] = 14
+    singularity["7"]["TextColor3"] = colorPalette.secondary
+    singularity["7"]["TextScaled"] = true
+    singularity["7"]["BackgroundColor3"] = colorPalette.background
+    singularity["7"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["7"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["7"]["ClearTextOnFocus"] = false
+    singularity["7"]["PlaceholderText"] = "placeholder"
+    singularity["7"]["Size"] = UDim2.new(0, 150, 0, 25)
+    singularity["7"]["Position"] = UDim2.new(0.74731, 0, 0.5, 0)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["Text"] = ""
+
+    singularity["8"] = Instance.new("UIStroke", singularity["7"])
+    singularity["8"]["Transparency"] = 1
+    singularity["8"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border
+    singularity["8"]["Thickness"] = 0.9
+    singularity["8"]["Color"] = colorPalette.accent
+
+    singularity["9"] = Instance.new("UICorner", singularity["7"])
+    singularity["9"]["CornerRadius"] = UDim.new(0.08, 0)
+
+    singularity["a"] = Instance.new("UITextSizeConstraint", singularity["7"])
+    singularity["a"]["MaxTextSize"] = 14
+    singularity["a"]["MinTextSize"] = 10
+
+    singularity["b"] = Instance.new("LocalScript", singularity["7"])
+    singularity["b"]["Name"] = "script"
+
+    local function C_b()
+        local script = singularity["b"]
+        script.Parent.FocusLost:Connect(function()
+            textbox.callback(script.Parent.Text)
+        end)
+    end
+    task.spawn(C_b)
+
+    memoryManager:track(singularity["2"], "textboxes")
+    return textbox
+end
+
+function singularitylibrary:label(params)
+    local label = {}
+    label.name = params.name
+    label.message = params.message
+    label.image = params.image
+    label.color = params.color
+    label.parent = params.parent
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity.main.tabframes[label.parent].layout)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.surface
+    singularity["2"]["ClipsDescendants"] = true
+    singularity["2"]["Size"] = UDim2.new(0, 333, 0, 41)
+    singularity["2"]["Position"] = UDim2.new(0.03361, 0, 0, 0)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = label.name
+    singularity["2"]["BackgroundTransparency"] = 1
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.05, 0)
+
+    singularity["4"] = Instance.new("UIStroke", singularity["2"])
+    singularity["4"]["Transparency"] = 1
+    singularity["4"]["Thickness"] = 0.9
+    singularity["4"]["Color"] = colorPalette.accent
+
+    singularity["5"] = Instance.new("TextLabel", singularity["2"])
+    singularity["5"]["TextWrapped"] = true
+    singularity["5"]["BorderSizePixel"] = 0
+    singularity["5"]["TextSize"] = 14
+    singularity["5"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["5"]["TextTransparency"] = 1
+    singularity["5"]["TextScaled"] = true
+    singularity["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["5"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["5"]["TextColor3"] = label.color
+    singularity["5"]["BackgroundTransparency"] = 1
+    singularity["5"]["Size"] = UDim2.new(0.84847, 0, 1, 0)
+    singularity["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["Text"] = label.message
+    singularity["5"]["Name"] = "message"
+    singularity["5"]["Position"] = UDim2.new(0.02102, 0, 0, 0)
+
+    singularity["6"] = Instance.new("UITextSizeConstraint", singularity["5"])
+    singularity["6"]["MaxTextSize"] = 14
+    singularity["6"]["MinTextSize"] = 12
+
+    singularity["7"] = Instance.new("ImageLabel", singularity["2"])
+    singularity["7"]["BorderSizePixel"] = 0
+    singularity["7"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["7"]["ImageTransparency"] = 1
+    singularity["7"]["ImageColor3"] = label.color
+    singularity["7"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["7"]["Image"] = label.image
+    singularity["7"]["Size"] = UDim2.new(0, 25, 0, 25)
+    singularity["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["7"]["BackgroundTransparency"] = 1
+    singularity["7"]["Name"] = "image"
+    singularity["7"]["Position"] = UDim2.new(0.94, 0, 0.5, 0)
+
+    singularity["8"] = Instance.new("UIAspectRatioConstraint", singularity["7"])
+
+    memoryManager:track(singularity["2"], "labels")
+    return label
+end
+
+function singularitylibrary:notification(params)
+    local notification = {}
+    notification.name = params.name
+    notification.title = params.title
+    notification.message = params.message
+    notification.image = params.image
+    notification.duration = params.duration
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("Frame", game.CoreGui.singularity)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = colorPalette.background
+    singularity["2"]["AnchorPoint"] = Vector2.new(1, 1)
+    singularity["2"]["Size"] = UDim2.new(0, 412, 0, 100)
+    singularity["2"]["Position"] = UDim2.new(1, 999, 1, -10)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["Name"] = notification.name
+
+    singularity["3"] = Instance.new("UICorner", singularity["2"])
+    singularity["3"]["CornerRadius"] = UDim.new(0.15, 0)
+
+    singularity["4"] = Instance.new("TextLabel", singularity["2"])
+    singularity["4"]["TextWrapped"] = true
+    singularity["4"]["BorderSizePixel"] = 0
+    singularity["4"]["TextSize"] = 14
+    singularity["4"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["4"]["TextYAlignment"] = Enum.TextYAlignment.Top
+    singularity["4"]["TextScaled"] = true
+    singularity["4"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["4"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["4"]["TextColor3"] = colorPalette.secondary
+    singularity["4"]["BackgroundTransparency"] = 1
+    singularity["4"]["Size"] = UDim2.new(0, 298, 0, 19)
+    singularity["4"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["4"]["Text"] = notification.title
+    singularity["4"]["Name"] = "title"
+    singularity["4"]["Position"] = UDim2.new(0.20388, 0, 0.16, 0)
+
+    singularity["5"] = Instance.new("UITextSizeConstraint", singularity["4"])
+    singularity["5"]["MaxTextSize"] = 14
+    singularity["5"]["MinTextSize"] = 12
+
+    singularity["6"] = Instance.new("TextLabel", singularity["2"])
+    singularity["6"]["TextWrapped"] = true
+    singularity["6"]["BorderSizePixel"] = 0
+    singularity["6"]["TextSize"] = 14
+    singularity["6"]["TextXAlignment"] = Enum.TextXAlignment.Left
+    singularity["6"]["TextYAlignment"] = Enum.TextYAlignment.Top
+    singularity["6"]["TextScaled"] = true
+    singularity["6"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["6"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    singularity["6"]["TextColor3"] = Color3.fromRGB(76, 76, 76)
+    singularity["6"]["BackgroundTransparency"] = 1
+    singularity["6"]["Size"] = UDim2.new(0, 298, 0, 59)
+    singularity["6"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["6"]["Text"] = notification.message
+    singularity["6"]["Name"] = "message"
+    singularity["6"]["Position"] = UDim2.new(0.20388, 0, 0.41, 0)
+
+    singularity["7"] = Instance.new("UITextSizeConstraint", singularity["6"])
+    singularity["7"]["MaxTextSize"] = 14
+    singularity["7"]["MinTextSize"] = 12
+
+    singularity["8"] = Instance.new("Frame", singularity["2"])
+    singularity["8"]["BorderSizePixel"] = 0
+    singularity["8"]["BackgroundColor3"] = Color3.fromRGB(26, 26, 26)
+    singularity["8"]["Size"] = UDim2.new(0, 50, 0, 50)
+    singularity["8"]["Position"] = UDim2.new(0.04, 0, 0.25, 0)
+    singularity["8"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["8"]["Name"] = "circle"
+
+    singularity["9"] = Instance.new("UICorner", singularity["8"])
+    singularity["9"]["CornerRadius"] = UDim.new(1, 0)
+
+    singularity["a"] = Instance.new("ImageLabel", singularity["8"])
+    singularity["a"]["BorderSizePixel"] = 0
+    singularity["a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["a"]["ImageColor3"] = colorPalette.secondary
+    singularity["a"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["a"]["Image"] = notification.image
+    singularity["a"]["Size"] = UDim2.new(0, 30, 0, 30)
+    singularity["a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["a"]["BackgroundTransparency"] = 1
+    singularity["a"]["Name"] = "image"
+    singularity["a"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+
+    singularity["b"] = Instance.new("UIAspectRatioConstraint", singularity["a"])
+
+    singularity["c"] = Instance.new("UIStroke", singularity["8"])
+    singularity["c"]["Thickness"] = 0.9
+    singularity["c"]["Color"] = colorPalette.accent
+
+    singularity["d"] = Instance.new("LocalScript", singularity["2"])
+    singularity["d"]["Name"] = "script"
+
+    local function C_d()
+        local script = singularity["d"]
+        local timetosingularitywait = notification.duration
+
+        advancedTween(script.Parent, { Position = UDim2.new(1, -10, 1, -10) }, 0.2)
+        singularitywait(timetosingularitywait)
+        local notificationtween = advancedTween(script.Parent, { Position = UDim2.new(1, 999, 1, -10) }, 0.2)
+
+        notificationtween.Completed:Connect(function()
+            script.Parent:Destroy()
+        end)
+    end
+    task.spawn(C_d)
+
+    memoryManager:track(singularity["2"], "notifications")
+    return notification
+end
+
+function singularitylibrary:discordnotification(params)
+    local discordnotification = {}
+    discordnotification.callback = params.callback
+
+    local singularity = {}
+
+    singularity["2"] = Instance.new("ImageLabel", game.CoreGui.singularity.main.top)
+    singularity["2"]["BorderSizePixel"] = 0
+    singularity["2"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["2"]["ImageColor3"] = Color3.fromRGB(115, 138, 219)
+    singularity["2"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    singularity["2"]["Image"] = "rbxassetid://134369453291280"
+    singularity["2"]["Size"] = UDim2.new(0, 22, 0, 22)
+    singularity["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["2"]["BackgroundTransparency"] = 1
+    singularity["2"]["Name"] = "discord"
+    singularity["2"]["Position"] = UDim2.new(0.851, 0, 0.5, 0)
+
+    singularity["3"] = Instance.new("UIAspectRatioConstraint", singularity["2"])
+
+    singularity["4"] = Instance.new("LocalScript", singularity["2"])
+    singularity["4"]["Name"] = "script"
+
+    singularity["5"] = Instance.new("TextButton", singularity["2"])
+    singularity["5"]["BorderSizePixel"] = 0
+    singularity["5"]["TextSize"] = 14
+    singularity["5"]["AutoButtonColor"] = false
+    singularity["5"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    singularity["5"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    singularity["5"]["BackgroundTransparency"] = 1
+    singularity["5"]["Size"] = UDim2.new(1, 0, 1, 0)
+    singularity["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    singularity["5"]["Text"] = ""
+    singularity["5"]["Name"] = "trigger"
+
+    singularity["6"] = Instance.new("LocalScript", singularity["5"])
+    singularity["6"]["Name"] = "script"
+
+    local function C_4()
+        local script = singularity["4"]
+        script.Parent.Rotation = 0
+
+        local goals1 = { Rotation = 15 }
+        local goals2 = { Rotation = -15 }
+        local goals3 = { Rotation = 10 }
+        local goals4 = { Rotation = -10 }
+        local goals5 = { Rotation = 0 }
+
+        local tween1 = advancedTween(script.Parent, goals1, 0.15)
+        local tween2 = advancedTween(script.Parent, goals2, 0.15)
+        local tween3 = advancedTween(script.Parent, goals3, 0.15)
+        local tween4 = advancedTween(script.Parent, goals4, 0.15)
+        local tween5 = advancedTween(script.Parent, goals5, 0.15)
+
+        while true do
+            tween1:Play()
+            tween1.Completed:Wait()
+            tween2:Play()
+            tween2.Completed:Wait()
+            tween3:Play()
+            tween3.Completed:Wait()
+            tween4:Play()
+            tween4.Completed:Wait()
+            tween5:Play()
+            tween5.Completed:Wait()
+            wait(2)
+        end
+    end
+    task.spawn(C_4)
+
+    local function C_6()
+        local script = singularity["6"]
+        local tweeninfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        script.Parent.MouseButton1Down:Connect(function()
+            createRippleEffect(script.Parent)
+            discordnotification.callback()
+        end)
+    end
+    task.spawn(C_6)
+
+    memoryManager:track(singularity["2"], "discord")
+    return discordnotification
+end
+
+return singularitylibrary
