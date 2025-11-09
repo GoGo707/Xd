@@ -1163,7 +1163,13 @@ function genScript(remote, args)
         local arguments = {}
         for i, v in ipairs(args) do
             if type(v) == "table" then
-                table.insert(arguments, t2s(v, 0, nil, nil, false, nil, nil, "", {}))
+                local tableStr = t2s(v, 0, nil, nil, false, nil, nil, "", {})
+                tableStr = tableStr:gsub('%[1%] = ', '')
+                tableStr = tableStr:gsub('%[2%] = ', '')
+                tableStr = tableStr:gsub('%[3%] = ', '')
+                tableStr = tableStr:gsub('%[4%] = ', '')
+                tableStr = tableStr:gsub('%[5%] = ', '')
+                table.insert(arguments, tableStr)
             elseif type(v) == "string" then
                 table.insert(arguments, formatstr(v))
             else
@@ -1199,7 +1205,6 @@ function genScript(remote, args)
     prevTables = {}
     return gen
 end
-
 --- value-to-string: value, string (out), level (indentation), parent table, var name, is from tovar
 function v2s(v, l, p, n, vtv, i, pt, path, tables, tI)
 	if not tI then
@@ -2458,3 +2463,4 @@ end, function()
 	end
 
 end)
+
