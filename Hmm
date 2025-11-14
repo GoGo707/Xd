@@ -51,6 +51,90 @@ function library:Create(class, properties)
 	return inst
 end
 
+-- وظيفة جديدة لتحريك النافذة إلى الموضع الأول
+local function moveWindowToFirstPosition(window, targetPosition)
+	if window.main then
+		tweenService:Create(window.main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Position = targetPosition
+		}):Play()
+	end
+end
+
+-- وظيفة جديدة لإخفاء النوافذ الأخرى
+local function fadeOutOtherWindows(currentWindow)
+	for _, window in next, library.windows do
+		if window ~= currentWindow and window.main then
+			-- إخفاء محتوى النافذة
+			if window.content then
+				for _, child in ipairs(window.content:GetChildren()) do
+					if child:IsA("GuiObject") then
+						tweenService:Create(child, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+							BackgroundTransparency = 1
+						}):Play()
+					end
+				end
+			end
+			
+			-- إخفاء النافذة نفسها
+			tweenService:Create(window.main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				BackgroundTransparency = 0.8,
+				ImageTransparency = 0.8
+			}):Play()
+		end
+	end
+end
+
+-- وظيفة جديدة لإظهار النوافذ الأخرى
+local function fadeInOtherWindows()
+	for _, window in next, library.windows do
+		if window.main then
+			-- إظهار النافذة نفسها
+			tweenService:Create(window.main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				BackgroundTransparency = 0,
+				ImageTransparency = 0
+			}):Play()
+			
+			-- إظهار محتوى النافذة إذا كانت مفتوحة
+			if window.open and window.content then
+				for _, child in ipairs(window.content:GetChildren()) do
+					if child:IsA("GuiObject") then
+						tweenService:Create(child, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+							BackgroundTransparency = 0
+						}):Play()
+					end
+				end
+			end
+		end
+	end
+end
+
+-- وظيفة جديدة لإظهار محتوى النافذة الحالية
+local function fadeInWindowContent(window)
+	if window.content then
+		for _, child in ipairs(window.content:GetChildren()) do
+			if child:IsA("GuiObject") then
+				child.BackgroundTransparency = 1
+				tweenService:Create(child, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					BackgroundTransparency = 0
+				}):Play()
+			end
+		end
+	end
+end
+
+-- وظيفة جديدة لإخفاء محتوى النافذة الحالية
+local function fadeOutWindowContent(window)
+	if window.content then
+		for _, child in ipairs(window.content:GetChildren()) do
+			if child:IsA("GuiObject") then
+				tweenService:Create(child, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					BackgroundTransparency = 1
+				}):Play()
+			end
+		end
+	end
+end
+
 local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 	local size = subHolder and 34 or 40
 	parentTable.main = library:Create("ImageButton", {
@@ -170,19 +254,45 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 			
 			if not subHolder then
 				if parentTable.open then
-					for _, window in next, library.windows do
-						if window ~= parentTable and window.main then
-							window.open = false
-							window.main.Visible = false
+					-- الخطوة 1: إخفاء النوافذ الأخرى تدريجياً
+					fadeOutOtherWindows(parentTable)
+					
+					-- الخطوة 2: تحريك النافذة الحالية إلى الموضع الأول
+					moveWindowToFirstPosition(parentTable, UDim2.new(0, 20, 0, 20))
+					
+					-- الخطوة 3: إظهار محتوى النافذة الحالية تدريجياً
+					delay(0.2, function()
+						fadeInWindowContent(parentTable)
+					end)
+					
+					-- إخفاء النوافذ الأخرى بعد الانتهاء من التحريك
+					delay(0.3, function()
+						for _, window in next, library.windows do
+							if window ~= parentTable and window.main then
+								window.open = false
+								window.main.Visible = false
+							end
 						end
-					end
-					parentTable.main.Visible = true
+						parentTable.main.Visible = true
+					end)
 				else
-					for _, window in next, library.windows do
-						if window.main then
-							window.main.Visible = true
-						end
-					end
+					-- الخطوة 1: إخفاء محتوى النافذة الحالية تدريجياً
+					fadeOutWindowContent(parentTable)
+					
+					-- الخطوة 2: إرجاع النافذة إلى موضعها الأصلي
+					delay(0.2, function()
+						moveWindowToFirstPosition(parentTable, UDim2.new(0, 20 + (250 * parentTable.position), 0, 20))
+						
+						-- الخطوة 3: إظهار النوافذ الأخرى تدريجياً بعد العودة
+						delay(0.3, function()
+							fadeInOtherWindows()
+							for _, window in next, library.windows do
+								if window.main then
+									window.main.Visible = true
+								end
+							end
+						end)
+					end)
 				end
 			end
 			
@@ -198,19 +308,45 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 			
 			if not subHolder then
 				if parentTable.open then
-					for _, window in next, library.windows do
-						if window ~= parentTable and window.main then
-							window.open = false
-							window.main.Visible = false
+					-- الخطوة 1: إخفاء النوافذ الأخرى تدريجياً
+					fadeOutOtherWindows(parentTable)
+					
+					-- الخطوة 2: تحريك النافذة الحالية إلى الموضع الأول
+					moveWindowToFirstPosition(parentTable, UDim2.new(0, 20, 0, 20))
+					
+					-- الخطوة 3: إظهار محتوى النافذة الحالية تدريجياً
+					delay(0.2, function()
+						fadeInWindowContent(parentTable)
+					end)
+					
+					-- إخفاء النوافذ الأخرى بعد الانتهاء من التحريك
+					delay(0.3, function()
+						for _, window in next, library.windows do
+							if window ~= parentTable and window.main then
+								window.open = false
+								window.main.Visible = false
+							end
 						end
-					end
-					parentTable.main.Visible = true
+						parentTable.main.Visible = true
+					end)
 				else
-					for _, window in next, library.windows do
-						if window.main then
-							window.main.Visible = true
-						end
-					end
+					-- الخطوة 1: إخفاء محتوى النافذة الحالية تدريجياً
+					fadeOutWindowContent(parentTable)
+					
+					-- الخطوة 2: إرجاع النافذة إلى موضعها الأصلي
+					delay(0.2, function()
+						moveWindowToFirstPosition(parentTable, UDim2.new(0, 20 + (250 * parentTable.position), 0, 20))
+						
+						-- الخطوة 3: إظهار النوافذ الأخرى تدريجياً بعد العودة
+						delay(0.3, function()
+							fadeInOtherWindows()
+							for _, window in next, library.windows do
+								if window.main then
+									window.main.Visible = true
+								end
+							end
+						end)
+					end)
 				end
 			end
 			
