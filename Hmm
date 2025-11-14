@@ -67,9 +67,6 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 		Parent = parent
 	})
 	
-	-- حفظ الموضع الأصلي للتبويب
-	parentTable.originalPosition = parentTable.main.Position
-	
 	local round
 	if not subHolder then
 		round = library:Create("ImageLabel", {
@@ -173,21 +170,17 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 			
 			if not subHolder then
 				if parentTable.open then
-					-- إخفاء كل التبويبات الأخرى
 					for _, window in next, library.windows do
 						if window ~= parentTable and window.main then
+							window.open = false
 							window.main.Visible = false
 						end
 					end
-					-- تحريك التبويب الحالي لأعلى
-					parentTable.main:TweenPosition(UDim2.new(0, 20, 0, 20), "Out", "Quad", 0.3, true)
+					parentTable.main.Visible = true
 				else
-					-- إظهار كل التبويبات
 					for _, window in next, library.windows do
 						if window.main then
 							window.main.Visible = true
-							-- إرجاع كل التبويبات لمواضعها الأصلية
-							window.main:TweenPosition(window.originalPosition, "Out", "Quad", 0.3, true)
 						end
 					end
 				end
@@ -205,21 +198,17 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 			
 			if not subHolder then
 				if parentTable.open then
-					-- إخفاء كل التبويبات الأخرى
 					for _, window in next, library.windows do
 						if window ~= parentTable and window.main then
+							window.open = false
 							window.main.Visible = false
 						end
 					end
-					-- تحريك التبويب الحالي لأعلى
-					parentTable.main:TweenPosition(UDim2.new(0, 20, 0, 20), "Out", "Quad", 0.3, true)
+					parentTable.main.Visible = true
 				else
-					-- إظهار كل التبويبات
 					for _, window in next, library.windows do
 						if window.main then
 							window.main.Visible = true
-							-- إرجاع كل التبويبات لمواضعها الأصلية
-							window.main:TweenPosition(window.originalPosition, "Out", "Quad", 0.3, true)
 						end
 					end
 				end
