@@ -67,6 +67,9 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 		Parent = parent
 	})
 	
+	-- حفظ الموضع الأصلي للتبويب
+	parentTable.originalPosition = parentTable.main.Position
+	
 	local round
 	if not subHolder then
 		round = library:Create("ImageLabel", {
@@ -165,66 +168,72 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 	end
 	
 	closeHolder.InputBegan:connect(function(input)
-	if input.UserInputType == ui then
-		parentTable.open = not parentTable.open
-		
-		if not subHolder then
-			if parentTable.open then
-				-- إخفاء كل التبويبات الأخرى عند فتح هذا التبويب
-				for _, window in next, library.windows do
-					if window ~= parentTable and window.main then
-						window.main.Visible = false
+		if input.UserInputType == ui then
+			parentTable.open = not parentTable.open
+			
+			if not subHolder then
+				if parentTable.open then
+					-- إخفاء كل التبويبات الأخرى
+					for _, window in next, library.windows do
+						if window ~= parentTable and window.main then
+							window.main.Visible = false
+						end
 					end
-				end
-				parentTable.main.Visible = true
-			else
-				-- إظهار كل التبويبات عند إغلاق هذا التبويب
-				for _, window in next, library.windows do
-					if window.main then
-						window.main.Visible = true
-					end
-				end
-			end
-		end
-		
-		tweenService:Create(close, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = parentTable.open and 90 or 180, ImageColor3 = parentTable.open and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(30, 30, 30)}):Play()
-		if subHolder then
-			tweenService:Create(title, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = parentTable.open and Color3.fromRGB(16, 16, 16) or Color3.fromRGB(10, 10, 10)}):Play()
-		else
-			tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = parentTable.open and Color3.fromRGB(10, 10, 10) or Color3.fromRGB(6, 6, 6)}):Play()
-		end
-		parentTable.main:TweenSize(#parentTable.options > 0 and parentTable.open and UDim2.new(0, 230, 0, layout.AbsoluteContentSize.Y + size) or UDim2.new(0, 230, 0, size), "Out", "Quad", 0.2, true)
-	elseif input.UserInputType == Enum.UserInputType.Touch then
-		parentTable.open = not parentTable.open
-		
-		if not subHolder then
-			if parentTable.open then
-				-- إخفاء كل التبويبات الأخرى عند فتح هذا التبويب
-				for _, window in next, library.windows do
-					if window ~= parentTable and window.main then
-						window.main.Visible = false
-					end
-				end
-				parentTable.main.Visible = true
-			else
-				-- إظهار كل التبويبات عند إغلاق هذا التبويب
-				for _, window in next, library.windows do
-					if window.main then
-						window.main.Visible = true
+					-- تحريك التبويب الحالي لأعلى
+					parentTable.main:TweenPosition(UDim2.new(0, 20, 0, 20), "Out", "Quad", 0.3, true)
+				else
+					-- إظهار كل التبويبات
+					for _, window in next, library.windows do
+						if window.main then
+							window.main.Visible = true
+							-- إرجاع كل التبويبات لمواضعها الأصلية
+							window.main:TweenPosition(window.originalPosition, "Out", "Quad", 0.3, true)
+						end
 					end
 				end
 			end
+			
+			tweenService:Create(close, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = parentTable.open and 90 or 180, ImageColor3 = parentTable.open and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(30, 30, 30)}):Play()
+			if subHolder then
+				tweenService:Create(title, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = parentTable.open and Color3.fromRGB(16, 16, 16) or Color3.fromRGB(10, 10, 10)}):Play()
+			else
+				tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = parentTable.open and Color3.fromRGB(10, 10, 10) or Color3.fromRGB(6, 6, 6)}):Play()
+			end
+			parentTable.main:TweenSize(#parentTable.options > 0 and parentTable.open and UDim2.new(0, 230, 0, layout.AbsoluteContentSize.Y + size) or UDim2.new(0, 230, 0, size), "Out", "Quad", 0.2, true)
+		elseif input.UserInputType == Enum.UserInputType.Touch then
+			parentTable.open = not parentTable.open
+			
+			if not subHolder then
+				if parentTable.open then
+					-- إخفاء كل التبويبات الأخرى
+					for _, window in next, library.windows do
+						if window ~= parentTable and window.main then
+							window.main.Visible = false
+						end
+					end
+					-- تحريك التبويب الحالي لأعلى
+					parentTable.main:TweenPosition(UDim2.new(0, 20, 0, 20), "Out", "Quad", 0.3, true)
+				else
+					-- إظهار كل التبويبات
+					for _, window in next, library.windows do
+						if window.main then
+							window.main.Visible = true
+							-- إرجاع كل التبويبات لمواضعها الأصلية
+							window.main:TweenPosition(window.originalPosition, "Out", "Quad", 0.3, true)
+						end
+					end
+				end
+			end
+			
+			tweenService:Create(close, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = parentTable.open and 90 or 180, ImageColor3 = parentTable.open and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(30, 30, 30)}):Play()
+			if subHolder then
+				tweenService:Create(title, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = parentTable.open and Color3.fromRGB(16, 16, 16) or Color3.fromRGB(10, 10, 10)}):Play()
+			else
+				tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = parentTable.open and Color3.fromRGB(10, 10, 10) or Color3.fromRGB(6, 6, 6)}):Play()
+			end
+			parentTable.main:TweenSize(#parentTable.options > 0 and parentTable.open and UDim2.new(0, 230, 0, layout.AbsoluteContentSize.Y + size) or UDim2.new(0, 230, 0, size), "Out", "Quad", 0.2, true)
 		end
-		
-		tweenService:Create(close, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = parentTable.open and 90 or 180, ImageColor3 = parentTable.open and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(30, 30, 30)}):Play()
-		if subHolder then
-			tweenService:Create(title, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = parentTable.open and Color3.fromRGB(16, 16, 16) or Color3.fromRGB(10, 10, 10)}):Play()
-		else
-			tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = parentTable.open and Color3.fromRGB(10, 10, 10) or Color3.fromRGB(6, 6, 6)}):Play()
-		end
-		parentTable.main:TweenSize(#parentTable.options > 0 and parentTable.open and UDim2.new(0, 230, 0, layout.AbsoluteContentSize.Y + size) or UDim2.new(0, 230, 0, size), "Out", "Quad", 0.2, true)
-	end
-end)
+	end)
 
 	function parentTable:SetTitle(newTitle)
 		title.Text = tostring(newTitle)
