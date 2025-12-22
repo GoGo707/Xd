@@ -1,1 +1,2319 @@
-.
+-- filename: 
+-- version: lua51
+-- line: [0, 0] id: 0
+loadstring(game:HttpGet("https://pastefy.app/GgW84Jlo/raw"))()
+loadstring(game:HttpGet("https://pastefy.app/2iAz9n3I/raw"))()
+local r0_0 = loadstring(game:HttpGet("https://pastefy.app/nJL1TXm0/raw", true))()
+local r3_0 = {
+  Name = "Denji Hub - Steal a Brainrot",
+  Subtitle = nil,
+  LogoID = "6034509993",
+  LoadingEnabled = true,
+  LoadingTitle = "Steal a Brainrot Script",
+  LoadingSubtitle = "by _Rezyc",
+  ConfigSettings = {
+    RootFolder = nil,
+    ConfigFolder = "baconhub Hub",
+  },
+  KeySystem = false,
+}
+r3_0.KeySettings = {
+  Title = "Luna Example Key",
+  Subtitle = "Key System",
+  Note = "Best Key System Ever! Also, Please Use A HWID Keysystem like Pelican, Luarmor etc. that provide key strings based on your HWID since putting a simple string is very easy to bypass",
+  SaveInRoot = false,
+  SaveKey = true,
+  Key = {
+    "Example Key"
+  },
+  SecondAction = {
+    Enabled = true,
+    Type = "Link",
+    Parameter = "",
+  },
+}
+local r1_0 = r0_0:CreateWindow(r3_0)
+r1_0.UI.Parent = game:GetService("CoreGui")
+local r2_0 = game:GetService("Lighting")
+r3_0 = game:GetService("RunService")
+local r4_0 = game:GetService("Workspace")
+for r8_0, r9_0 in pairs(r2_0:GetChildren()) do
+  r9_0:Destroy()
+end
+r2_0.ChildAdded:Connect(function(r0_19)
+  -- line: [0, 0] id: 19
+  r0_19:Destroy()
+end)
+r2_0.GlobalShadows = false
+for r8_0, r9_0 in pairs(r4_0:GetDescendants()) do
+  if r9_0:IsA("BasePart") then
+    r9_0.CastShadow = false
+    r9_0.Material = Enum.Material.Plastic
+  end
+end
+local r5_0 = 0
+r3_0.Heartbeat:Connect(function(r0_339)
+  -- line: [0, 0] id: 339
+  r5_0 = r5_0 + r0_339
+  if r5_0 >= 0.2 then
+    r5_0 = 0
+  end
+end)
+function print()
+  -- line: [0, 0] id: 254
+end
+function warn()
+  -- line: [0, 0] id: 93
+end
+function error()
+  -- line: [0, 0] id: 237
+end
+local r6_0 = game:GetService("CoreGui")
+local r7_0 = game:GetService("RunService")
+local r8_0 = game:GetService("Workspace")
+local r9_0 = Color3.fromRGB(217, 249, 250)
+if r6_0:FindFirstChild("ESP_TimeBase") then
+  r6_0.ESP_TimeBase:Destroy()
+end
+local r10_0 = Instance.new("Folder")
+r10_0.Name = "ESP_TimeBase"
+r10_0.Parent = r6_0
+local r11_0 = {}
+local function r12_0(r0_235)
+  -- line: [0, 0] id: 235
+  if r0_235.PrimaryPart then
+    return r0_235.PrimaryPart
+  end
+  for r4_235, r5_235 in ipairs(r0_235:GetChildren()) do
+    if r5_235:IsA("BasePart") then
+      return r5_235
+    end
+  end
+end
+local function r13_0(r0_313)
+  -- line: [0, 0] id: 313
+  if not r0_313 or not r0_313:FindFirstChild("Purchases") or not r0_313.Purchases:FindFirstChild("PlotBlock") then
+    return 
+  end
+  local r1_313 = tostring(r0_313)
+  if r11_0[r1_313] then
+    return 
+  end
+  local r2_313 = r12_0(r0_313)
+  if not r2_313 then
+    return 
+  end
+  local r3_313 = Instance.new("BillboardGui")
+  r3_313.Name = "ESP_Time"
+  r3_313.Adornee = r2_313
+  r3_313.AlwaysOnTop = true
+  r3_313.Size = UDim2.new(0, 100, 0, 30)
+  r3_313.StudsOffset = Vector3.new(0, 6, 0)
+  r3_313.MaxDistance = 2000
+  r3_313.LightInfluence = 0
+  r3_313.Parent = r10_0
+  local r4_313 = Instance.new("TextLabel")
+  r4_313.Size = UDim2.new(0.6, 0, 1, 0)
+  r4_313.BackgroundTransparency = 1
+  r4_313.TextScaled = true
+  r4_313.Font = Enum.Font.GothamBold
+  r4_313.TextStrokeTransparency = 0.5
+  r4_313.TextTransparency = 0
+  r4_313.Text = ""
+  r4_313.Parent = r3_313
+  local r5_313 = Instance.new("TextLabel")
+  r5_313.Size = UDim2.new(0.3, 0, 1, 0)
+  r5_313.Position = UDim2.new(0.6, 0, 0, 0)
+  r5_313.BackgroundTransparency = 1
+  r5_313.TextScaled = true
+  r5_313.Font = Enum.Font.GothamBold
+  r5_313.TextStrokeTransparency = 0.5
+  r5_313.TextColor3 = Color3.fromRGB(255, 255, 255)
+  r5_313.TextTransparency = 0
+  r5_313.Text = ""
+  r5_313.Parent = r3_313
+  r11_0[r1_313] = {
+    Billboard = r3_313,
+    StatusLabel = r4_313,
+    TimeLabel = r5_313,
+    Model = r0_313,
+  }
+end
+local function r14_0(r0_111)
+  -- line: [0, 0] id: 111
+  local r1_111 = r0_111:FindFirstChild("Purchases")
+  if not r1_111 then
+    return "Empty", ""
+  end
+  local r2_111 = r1_111:FindFirstChild("PlotBlock")
+  if not r2_111 then
+    return "Empty", ""
+  end
+  local r3_111 = r2_111:FindFirstChild("Main")
+  if not r3_111 then
+    return "Empty", ""
+  end
+  local r4_111 = r3_111:FindFirstChild("BillboardGui")
+  if not r4_111 then
+    return "Empty", ""
+  end
+  local r5_111 = r4_111:FindFirstChild("Locked")
+  local r6_111 = r4_111:FindFirstChild("RemainingTime")
+  if not r5_111 or not r6_111 then
+    return "Empty", ""
+  end
+  if r5_111.Visible then
+    local r7_111 = tostring(r6_111.Text):gsub("%s", "")
+    if r7_111 == "" or r7_111 == "0" or r7_111 == "0:00" then
+      return "Unlocked", ""
+    end
+    return "Locked", r7_111
+  end
+  return "Unlocked", ""
+end
+r7_0.RenderStepped:Connect(function()
+  -- line: [0, 0] id: 314
+  for r3_314, r4_314 in pairs(r11_0) do
+    local r5_314 = r4_314.Model
+    if not r5_314 or not r5_314.Parent then
+      if r4_314.Billboard then
+        r4_314.Billboard:Destroy()
+      end
+      r11_0[r3_314] = nil
+    else
+      local r6_314, r7_314 = r14_0(r5_314)
+      if r6_314 == "Empty" then
+        r4_314.Billboard.Enabled = false
+      else
+        r4_314.Billboard.Enabled = true
+        r4_314.StatusLabel.Text = r6_314
+        if r6_314 == "Locked" then
+          r4_314.StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+          r4_314.TimeLabel.Text = r7_314
+        else
+          r4_314.StatusLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+          r4_314.TimeLabel.Text = ""
+        end
+      end
+    end
+  end
+end)
+for r18_0, r19_0 in ipairs(r8_0.Plots:GetChildren()) do
+  r13_0(r19_0)
+end
+r8_0.Plots.ChildAdded:Connect(r13_0)
+local r15_0 = game:GetService("Players")
+local r16_0 = game:GetService("ReplicatedStorage")
+local r17_0 = r15_0.LocalPlayer
+local r18_0 = require(r16_0.Controllers.PlotController)
+local r19_0 = require(r16_0.Datas.Animals)
+local r20_0 = require(r16_0.Shared.Animals)
+local function r21_0(r0_94, r1_94)
+  -- line: [0, 0] id: 94
+  local r2_94 = {}
+  for r6_94 in string.gmatch(r0_94, "([^" .. r1_94 .. "]+)") do
+    table.insert(r2_94, r6_94)
+  end
+  return r2_94
+end
+local function r22_0(r0_16, r1_16)
+  -- line: [0, 0] id: 16
+  local r2_16 = {}
+  for r6_16, r7_16 in ipairs(r0_16) do
+    local r8_16 = false
+    for r12_16, r13_16 in ipairs(r0_16) do
+      if r13_16 ~= r7_16 then
+        local r14_16 = false
+        local r15_16 = false
+        for r19_16, r20_16 in ipairs(r1_16) do
+          local r21_16 = r7_16[r20_16] or -math.huge
+          local r22_16 = r13_16[r20_16] or -math.huge
+          if r21_16 < r22_16 then
+            r15_16 = true
+          elseif r22_16 < r21_16 then
+            r14_16 = true
+          end
+        end
+        if r15_16 and not r14_16 then
+          r8_16 = true
+          break
+        end
+      end
+    end
+    if not r8_16 then
+      table.insert(r2_16, r7_16)
+    end
+  end
+  return r2_16
+end
+local r23_0 = {
+  GetPlots = function()
+    -- line: [0, 0] id: 324
+    if not _plots then
+      getgenv()._plots = getupvalue(r18_0.Start, 2)
+    end
+    return _plots
+  end,
+  GetPlot = function(r0_49)
+    -- line: [0, 0] id: 49
+    local r1_49 = nil	-- notice: implicit variable refs by block#[3]
+    if r0_49 then
+      r1_49 = r23_0.GetPlots()[r0_49]
+      if not r1_49 then
+        ::label_8::
+        r1_49 = r18_0:GetMyPlot()
+      end
+    else
+      goto label_8	-- block#2 is visited secondly
+    end
+    return r1_49
+  end,
+  GetPlotAnimals = function(r0_50)
+    -- line: [0, 0] id: 50
+    if not r0_50 then
+      r0_50 = r23_0.GetPlot()
+    end
+    local r1_50, r2_50 = r0_50.Channel:Get("AnimalList")
+    return r2_50.AnimalList
+  end,
+  GetAnimalPrice = function(r0_323)
+    -- line: [0, 0] id: 323
+    return r20_0:GetPrice(r0_323)
+  end,
+  GetAnimalGeneration = function(r0_104, r1_104, r2_104)
+    -- line: [0, 0] id: 104
+    return r20_0:GetGeneration(r0_104, r1_104, r2_104, nil)
+  end,
+}
+local r24_0 = {
+  Price = 1,
+  Generation = 2,
+  Both = 3,
+}
+r23_0.HighlightBestPlotAnimals = {
+  lastHighlights = {},
+  lastGuis = {},
+  CHECK_DELAY = 0.25,
+  highlightMode = r24_0.Both,
+  highlightEveryBase = true,
+  excludeOwnBase = true,
+}
+function r23_0.HighlightBestPlotAnimals.GetBestAnimalGuisGlobal(r0_337)
+  -- line: [0, 0] id: 337
+  local r1_337 = {}
+  local r2_337 = {}
+  for r6_337, r7_337 in pairs(r23_0.GetPlots()) do
+    if not r0_337.excludeOwnBase or r7_337.UID ~= r23_0.GetPlot().UID then
+      local r8_337 = r23_0.GetPlotAnimals(r7_337)
+      if r8_337 then
+        for r12_337, r13_337 in pairs(r8_337) do
+          if r13_337 ~= "Empty" and r13_337.Steal == false then
+            local r14_337 = r23_0.GetAnimalPrice(r13_337.Index)
+            local r15_337 = r23_0.GetAnimalGeneration(r13_337.Index, r13_337.Mutation, r13_337.Traits)
+            if r14_337 and r15_337 then
+              table.insert(r2_337, {
+                plotUID = r7_337.UID,
+                index = r12_337,
+                price = r14_337,
+                generation = r15_337,
+              })
+            end
+          end
+        end
+      end
+    end
+  end
+  if #r2_337 == 0 then
+    return 
+  end
+  local r3_337 = {}
+  if bit32.band(r0_337.highlightMode, r24_0.Price) ~= 0 then
+    table.insert(r3_337, "price")
+  end
+  if bit32.band(r0_337.highlightMode, r24_0.Generation) ~= 0 then
+    table.insert(r3_337, "generation")
+  end
+  for r7_337, r8_337 in pairs(r22_0(r2_337, r3_337)) do
+    local r9_337, r10_337 = pcall(function()
+      -- line: [0, 0] id: 338
+      return workspace.Plots[r8_337.plotUID].AnimalPodiums[r8_337.index]
+    end)
+    if r9_337 and r10_337 then
+      local r11_337 = r10_337:FindFirstChild("AnimalOverhead", true)
+      if r11_337 then
+        table.insert(r1_337, r11_337)
+      end
+    end
+    -- close: r7_337
+  end
+  return r1_337
+end
+function r23_0.HighlightBestPlotAnimals.GetBestAnimalGuisForPlot(r0_321, r1_321)
+  -- line: [0, 0] id: 321
+  local r2_321 = {}
+  local r3_321 = {}
+  local r4_321 = r23_0.GetPlotAnimals(r1_321)
+  if not r4_321 then
+    return 
+  end
+  for r8_321, r9_321 in pairs(r4_321) do
+    if r9_321 ~= "Empty" and r9_321.Steal == false then
+      local r10_321 = r23_0.GetAnimalPrice(r9_321.Index)
+      local r11_321 = r23_0.GetAnimalGeneration(r9_321.Index, r9_321.Mutation, r9_321.Traits)
+      if r10_321 and r11_321 then
+        table.insert(r3_321, {
+          index = r8_321,
+          price = r10_321,
+          generation = r11_321,
+        })
+      end
+    end
+  end
+  if #r3_321 == 0 then
+    return 
+  end
+  local r5_321 = {}
+  if bit32.band(r0_321.highlightMode, r24_0.Price) ~= 0 then
+    table.insert(r5_321, "price")
+  end
+  if bit32.band(r0_321.highlightMode, r24_0.Generation) ~= 0 then
+    table.insert(r5_321, "generation")
+  end
+  for r9_321, r10_321 in pairs(r22_0(r3_321, r5_321)) do
+    local r11_321, r12_321 = pcall(function()
+      -- line: [0, 0] id: 322
+      return workspace.Plots[r1_321.UID].AnimalPodiums[r10_321.index]
+    end)
+    if r11_321 and r12_321 then
+      local r13_321 = r12_321:FindFirstChild("AnimalOverhead", true)
+      if r13_321 then
+        table.insert(r2_321, r13_321)
+      end
+    end
+    -- close: r9_321
+  end
+  return r2_321
+end
+function r23_0.HighlightBestPlotAnimals.Toggle(r0_7, r1_7)
+  -- line: [0, 0] id: 7
+  if r1_7 and not r0_7.isRunning then
+    r0_7.enabled = true
+  elseif not r1_7 and r0_7.enabled then
+    r0_7.enabled = false
+    return 
+  end
+  r0_7.isRunning = true
+  local function r2_7(r0_8, r1_8)
+    -- line: [0, 0] id: 8
+    if r1_8 then
+      r0_8.AlwaysOnTop = true
+      r0_8.MaxDistance = 9999
+      r0_8.Size = UDim2.fromScale(100, 35)
+      table.insert(r0_7.lastGuis, r0_8)
+    else
+      r0_8.AlwaysOnTop = false
+      r0_8.MaxDistance = 60
+      r0_8.Size = UDim2.fromScale(15, 5)
+    end
+  end
+  local function r3_7(r0_10)
+    -- line: [0, 0] id: 10
+    local r1_10 = Instance.new("Highlight")
+    r1_10.FillColor = Color3.fromRGB(0, 255, 0)
+    r1_10.OutlineColor = Color3.fromRGB(0, 255, 0)
+    r1_10.Parent = r0_10
+    table.insert(r0_7.lastHighlights, r1_10)
+  end
+  local function r4_7()
+    -- line: [0, 0] id: 11
+    for r3_11, r4_11 in pairs(r0_7.lastHighlights) do
+      if r4_11 then
+        r4_11:Destroy()
+      end
+    end
+    for r3_11, r4_11 in pairs(r0_7.lastGuis) do
+      r2_7(r4_11, false)
+    end
+    table.clear(r0_7.lastHighlights)
+    table.clear(r0_7.lastGuis)
+  end
+  while task.wait(r0_7.CHECK_DELAY) do
+    local r5_7 = r0_7.enabled
+    if r5_7 then
+      r4_7()
+      r5_7 = nil
+      local r6_7 = -math.huge
+      for r10_7, r11_7 in pairs(r23_0.GetPlots()) do
+        if not r0_7.excludeOwnBase or r11_7 ~= r23_0.GetPlot() then
+          local r12_7 = r23_0.GetPlotAnimals(r11_7)
+          if r12_7 then
+            for r16_7, r17_7 in pairs(r12_7) do
+              if r17_7 ~= "Empty" and r17_7.Steal == false then
+                local r18_7 = r23_0.GetAnimalGeneration(r17_7.Index, r17_7.Mutation, r17_7.Traits)
+                if r18_7 and r6_7 < r18_7 then
+                  r6_7 = r18_7
+                  r5_7 = {
+                    plotUID = r11_7.UID,
+                    index = r16_7,
+                  }
+                end
+              end
+            end
+          end
+        end
+      end
+      if r5_7 then
+        local r7_7, r8_7 = pcall(function()
+          -- line: [0, 0] id: 9
+          return workspace.Plots[r5_7.plotUID].AnimalPodiums[r5_7.index]
+        end)
+        if r7_7 and r8_7 then
+          local r9_7 = r8_7:FindFirstChild("AnimalOverhead", true)
+          if r9_7 then
+            r2_7(r9_7, true)
+          end
+          r3_7(r8_7)
+        end
+      end
+      -- close: r5_7
+    else
+      break
+    end
+  end
+  r4_7()
+  r0_7.isRunning = false
+end
+r23_0.BigPlotTimers = {}
+function r23_0.BigPlotTimers.Toggle(r0_172, r1_172)
+  -- line: [0, 0] id: 172
+  if r0_172.Init then
+    r0_172:Init()
+  end
+  if r1_172 and not r0_172.isRunning then
+    r0_172.enabled = true
+  elseif not r1_172 and r0_172.enabled then
+    r0_172.enabled = false
+  end
+  r0_172.isRunning = true
+  while task.wait() do
+    local r2_172 = r0_172.enabled
+    if r2_172 then
+      pcall(function()
+        -- line: [0, 0] id: 173
+        for r3_173, r4_173 in workspace.Plots:GetChildren() do
+          r4_173.Purchases.PlotBlock.Main.BillboardGui.AlwaysOnTop = true
+          r4_173.Purchases.PlotBlock.Main.BillboardGui.MaxDistance = 1000
+          r4_173.Purchases.PlotBlock.Main.BillboardGui.Size = UDim2.fromScale(35, 50)
+        end
+      end)
+    else
+      break
+    end
+  end
+  pcall(function()
+    -- line: [0, 0] id: 174
+    for r3_174, r4_174 in workspace.Plots:GetChildren() do
+      r4_174.Purchases.PlotBlock.Main.BillboardGui.AlwaysOnTop = false
+      r4_174.Purchases.PlotBlock.Main.BillboardGui.MaxDistance = 60
+      r4_174.Purchases.PlotBlock.Main.BillboardGui.Size = UDim2.fromScale(7, 10)
+    end
+  end)
+  r0_172.isRunning = false
+end
+local r25_0 = r1_0:CreateTab({
+  Name = "Stealer (New)",
+  Icon = "flash_on",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+local r26_0 = r1_0:CreateTab({
+  Name = "Steal Helper",
+  Icon = "build",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+local r27_0 = r1_0:CreateTab({
+  Name = "Buy Animals",
+  Icon = "shopping_cart",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+local r28_0 = r1_0:CreateTab({
+  Name = "ESP",
+  Icon = "visibility",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+local r29_0 = r1_0:CreateTab({
+  Name = "Webhook Scanner",
+  Icon = "link",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+local r30_0 = r1_0:CreateTab({
+  Name = "Server Actions",
+  Icon = "storage",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+local r31_0 = r1_0:CreateTab({
+  Name = "Settings",
+  Icon = "settings",
+  ImageSource = "Material",
+  ShowTitle = true,
+})
+r25_0:CreateSection("All Seeing Sentry")
+local r32_0 = r25_0:CreateToggle({
+  Name = "Show Turret Destroy GUI",
+  Description = "Works While Holding Brainrot!",
+  CurrentValue = false,
+  Callback = function(r0_180)
+    -- line: [0, 0] id: 180
+    local r2_180 = game:GetService("Players")
+    local r3_180 = game:GetService("ReplicatedStorage")
+    local r4_180 = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("SentryBypassUI")
+    if r4_180 then
+      r4_180.Enabled = r0_180
+      return 
+    end
+    if r0_180 then
+      local r5_180 = game:GetService("Players")
+      local r6_180 = game:GetService("RunService")
+      local r7_180 = game:GetService("Workspace")
+      local r8_180 = game:GetService("TweenService")
+      local r9_180 = r5_180.LocalPlayer
+      local r10_180 = nil
+      local r11_180 = "Bat"
+      local r12_180 = "Bat"
+      local r13_180 = 0.15
+      local r14_180 = 0.03
+      local r15_180 = false
+      local r16_180 = nil
+      local r17_180 = nil
+      local r18_180 = false
+      local r19_180 = nil
+      local r20_180 = nil
+      local r21_180 = Instance.new("ScreenGui")
+      r21_180.Name = "SentryBypassUI"
+      r21_180.ResetOnSpawn = false
+      r21_180.Parent = r9_180:WaitForChild("PlayerGui")
+      local r22_180 = Instance.new("Frame")
+      r22_180.Size = UDim2.new(0, 200, 0, 100)
+      r22_180.Position = UDim2.new(1, -1150, 0, 150)
+      r22_180.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+      r22_180.BorderSizePixel = 0
+      r22_180.AnchorPoint = Vector2.new(0.5, 0.5)
+      r22_180.Parent = r21_180
+      r22_180.Draggable = true
+      r22_180.Active = true
+      local r23_180 = Instance.new("UICorner")
+      r23_180.CornerRadius = UDim.new(0, 12)
+      r23_180.Parent = r22_180
+      local r24_180 = Instance.new("TextLabel")
+      r24_180.Size = UDim2.new(1, 0, 0.5, 0)
+      r24_180.BackgroundTransparency = 1
+      r24_180.Text = "Turret Destroyer"
+      r24_180.TextColor3 = Color3.fromRGB(230, 230, 230)
+      r24_180.TextSize = 18
+      r24_180.Font = Enum.Font.GothamBold
+      r24_180.Parent = r22_180
+      local r25_180 = Instance.new("TextButton")
+      r25_180.Size = UDim2.new(0.7, 0, 0.35, 0)
+      r25_180.Position = UDim2.new(0.15, 0, 0.55, 0)
+      r25_180.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+      r25_180.Text = "OFF"
+      r25_180.Font = Enum.Font.GothamBold
+      r25_180.TextColor3 = Color3.fromRGB(255, 255, 255)
+      r25_180.TextSize = 20
+      r25_180.BorderSizePixel = 0
+      r25_180.Parent = r22_180
+      local r26_180 = Instance.new("UICorner")
+      r26_180.CornerRadius = UDim.new(0, 8)
+      r26_180.Parent = r25_180
+      r25_180.MouseEnter:Connect(function()
+        -- line: [0, 0] id: 182
+        r8_180:Create(r25_180, TweenInfo.new(0.15), {
+          Size = UDim2.new(0.75, 0, 0.4, 0),
+        }):Play()
+      end)
+      r25_180.MouseLeave:Connect(function()
+        -- line: [0, 0] id: 208
+        r8_180:Create(r25_180, TweenInfo.new(0.15), {
+          Size = UDim2.new(0.7, 0, 0.35, 0),
+        }):Play()
+      end)
+      local function r27_180(r0_185)
+        -- line: [0, 0] id: 185
+        r10_180 = r0_185:FindFirstChildOfClass("Humanoid") or r0_185:WaitForChild("Humanoid", 5)
+      end
+      if r9_180.Character then
+        r27_180(r9_180.Character)
+      end
+      r9_180.CharacterAdded:Connect(r27_180)
+      local function r28_180()
+        -- line: [0, 0] id: 207
+        for r3_207, r4_207 in ipairs(r7_180:GetChildren()) do
+          if r4_207.Name:match("^Sentry") then
+            return true
+          end
+        end
+        return false
+      end
+      local function r29_180()
+        -- line: [0, 0] id: 199
+        if r20_180 then
+          return 
+        end
+        r20_180 = coroutine.create(function()
+          -- line: [0, 0] id: 200
+          while r15_180 do
+            local r0_200 = r10_180
+            if r0_200 then
+              r0_200 = r28_180()
+              if r0_200 then
+                r0_200 = r9_180.Character:FindFirstChild(r12_180)
+                if not r0_200 then
+                  local r1_200 = r9_180:FindFirstChild("Backpack")
+                  if r1_200 then
+                    r0_200 = r1_200:FindFirstChild(r12_180)
+                  end
+                end
+                if r0_200 and r0_200.Parent == r9_180.Backpack then
+                  pcall(function()
+                    -- line: [0, 0] id: 201
+                    r10_180:EquipTool(r0_200)
+                  end)
+                end
+                -- close: r0_200
+              end
+            end
+            task.wait(r14_180)
+          end
+          r20_180 = nil
+        end)
+        coroutine.resume(r20_180)
+      end
+      local function r30_180()
+        -- line: [0, 0] id: 194
+        local r0_194 = nil	-- notice: implicit variable refs by block#[0]
+        r20_180 = r0_194
+      end
+      local function r31_180()
+        -- line: [0, 0] id: 188
+        if r16_180 then
+          return 
+        end
+        r16_180 = r6_180.Heartbeat:Connect(function()
+          -- line: [0, 0] id: 189
+          if r15_180 and r28_180() then
+            local r0_189 = r9_180.Character:FindFirstChild(r12_180)
+            if r0_189 then
+              pcall(function()
+                -- line: [0, 0] id: 191
+                r0_189:Activate()
+              end)
+              for r4_189, r5_189 in pairs(r0_189:GetDescendants()) do
+                if r5_189:IsA("RemoteEvent") then
+                  pcall(function()
+                    -- line: [0, 0] id: 192
+                    r5_189:FireServer()
+                  end)
+                elseif r5_189:IsA("RemoteFunction") then
+                  pcall(function()
+                    -- line: [0, 0] id: 190
+                    r5_189:InvokeServer()
+                  end)
+                end
+                -- close: r4_189
+              end
+              if r0_189.Activated then
+                pcall(function()
+                  -- line: [0, 0] id: 193
+                  r0_189.Activated:Fire()
+                end)
+              end
+            end
+            -- close: r0_189
+          end
+        end)
+      end
+      local function r32_180()
+        -- line: [0, 0] id: 198
+        if r16_180 then
+          r16_180:Disconnect()
+          r16_180 = nil
+        end
+      end
+      local function r33_180(r0_186)
+        -- line: [0, 0] id: 186
+        if not r0_186 then
+          return 
+        end
+        pcall(function()
+          -- line: [0, 0] id: 187
+          if r0_186.Parent == r9_180.Character then
+            if r0_186.Activate then
+              r0_186:Activate()
+            end
+            if r0_186.Deactivate then
+              r0_186:Deactivate()
+            end
+          end
+        end)
+      end
+      local function r34_180()
+        -- line: [0, 0] id: 181
+        if r9_180.Character then
+          local r0_181 = r9_180.Character:FindFirstChild(r12_180)
+          if r0_181 and r0_181:IsA("Tool") then
+            return r0_181
+          end
+        end
+        local r0_181 = r9_180:FindFirstChild("Backpack")
+        if r0_181 then
+          local r1_181 = r0_181:FindFirstChild(r12_180)
+          if r1_181 and r1_181:IsA("Tool") then
+            return r1_181
+          end
+        end
+        return nil
+      end
+      local function r35_180()
+        -- line: [0, 0] id: 205
+        if r19_180 then
+          r19_180:Disconnect()
+        end
+        r18_180 = true
+        r19_180 = r6_180.Heartbeat:Connect(function()
+          -- line: [0, 0] id: 206
+          if not r18_180 or not r28_180() then
+            return 
+          end
+          local r0_206 = r34_180()
+          if r0_206 then
+            r33_180(r0_206)
+          end
+          task.wait(r13_180)
+        end)
+      end
+      local function r36_180()
+        -- line: [0, 0] id: 204
+        r18_180 = false
+        if r19_180 then
+          r19_180:Disconnect()
+          r19_180 = nil
+        end
+      end
+      local function r37_180(r0_197)
+        -- line: [0, 0] id: 197
+        local r2_197 = math.huge
+        local r1_197 = nil	-- notice: implicit variable refs by block#[7]
+        for r6_197, r7_197 in ipairs(r5_180:GetPlayers()) do
+          if r7_197 ~= r9_180 and r7_197.Character and r7_197.Character:FindFirstChild("HumanoidRootPart") then
+            local r9_197 = (r7_197.Character.HumanoidRootPart.Position - r0_197).Magnitude
+            if r9_197 < r2_197 then
+              r2_197 = r9_197
+              r1_197 = r7_197
+            end
+          end
+        end
+        return r1_197
+      end
+      local function r38_180()
+        -- line: [0, 0] id: 203
+        local r0_203 = r9_180.Character and r9_180.Character:FindFirstChild("HumanoidRootPart")
+        if not r0_203 then
+          return 
+        end
+        local r1_203 = r37_180(r0_203.Position)
+        if not r1_203 then
+          return 
+        end
+        local r3_203 = r7_180:FindFirstChild("Sentry_" .. tostring(r1_203.UserId))
+        if r3_203 then
+          r3_203.CFrame = CFrame.new(r0_203.Position + r0_203.CFrame.LookVector * 3 + Vector3.new(0, 2, 0))
+          r3_203.CanCollide = true
+        end
+      end
+      local function r39_180()
+        -- line: [0, 0] id: 195
+        if r17_180 then
+          return 
+        end
+        r17_180 = task.spawn(function()
+          -- line: [0, 0] id: 196
+          while r15_180 do
+            local r0_196 = r28_180()
+            if r0_196 then
+              r38_180()
+              r0_196 = r18_180
+              if not r0_196 then
+                r35_180()
+              end
+            else
+              r36_180()
+            end
+            task.wait(1)
+          end
+          r36_180()
+        end)
+      end
+      local function r40_180()
+        -- line: [0, 0] id: 202
+        r15_180 = false
+        r30_180()
+        r32_180()
+        r36_180()
+        r17_180 = nil
+      end
+      r9_180.CharacterAdded:Connect(function()
+        -- line: [0, 0] id: 183
+        task.wait(0.5)
+        if r15_180 then
+          r29_180()
+          r31_180()
+          r39_180()
+        end
+      end)
+      r25_180.MouseButton1Click:Connect(function()
+        -- line: [0, 0] id: 184
+        r15_180 = not r15_180
+        if r15_180 then
+          r25_180.Text = "ON"
+          r25_180.BackgroundColor3 = Color3.fromRGB(60, 200, 60)
+          r29_180()
+          r31_180()
+          r39_180()
+        else
+          r25_180.Text = "OFF"
+          r25_180.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+          r40_180()
+        end
+      end)
+      -- close: r5_180
+    end
+  end,
+})
+r25_0:CreateSection("Destroy Effects")
+local r33_0 = game:GetService("Lighting")
+local r34_0 = game:GetService("Players")
+local r35_0 = game:GetService("ReplicatedStorage")
+local r36_0 = r34_0.LocalPlayer
+local r37_0 = workspace.CurrentCamera
+local r39_0 = require(r36_0:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule")):GetControls()
+local r40_0 = nil
+pcall(function()
+  -- line: [0, 0] id: 236
+  r40_0 = require(r35_0:WaitForChild("Controllers"):WaitForChild("CharacterController"))
+end)
+local r41_0 = nil
+pcall(function()
+  -- line: [0, 0] id: 107
+  if r40_0 and r40_0.originalMoveFunction then
+    r41_0 = r40_0.originalMoveFunction
+  end
+end)
+local function r42_0()
+  -- line: [0, 0] id: 109
+  if r37_0.FieldOfView ~= 70 then
+    r37_0.FieldOfView = 70
+  end
+  for r3_109, r4_109 in ipairs(r33_0:GetChildren()) do
+    if r4_109:IsA("BlurEffect") or r4_109.Name:lower():find("bee") or r4_109.Name:lower():find("colorcorrection") then
+      r4_109:Destroy()
+    end
+  end
+  for r3_109, r4_109 in ipairs(r36_0:GetDescendants()) do
+    if r4_109:IsA("Sound") and r4_109.Name:lower():find("buzz") then
+      r4_109:Stop()
+    end
+  end
+  if r39_0.moveFunction ~= r41_0 and r41_0 then
+    r39_0.moveFunction = r41_0
+  end
+end
+local r43_0 = r25_0:CreateToggle({
+  Name = "Anti Bee Effect",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_233)
+    -- line: [0, 0] id: 233
+    _G.DestroyBeeEffect = r0_233
+    if r0_233 then
+      task.spawn(function()
+        -- line: [0, 0] id: 234
+        while _G.DestroyBeeEffect do
+          r42_0()
+          task.wait(0.5)
+        end
+      end)
+    else
+      r42_0()
+    end
+  end,
+}, "BeeEffectToggle")
+local r44_0 = r25_0:CreateToggle({
+  Name = "Disable Shakes & Effects",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_256)
+    -- line: [0, 0] id: 256
+    local r1_256 = nil	-- notice: implicit variable refs by block#[13]
+    if r0_256 then
+      r1_256 = game:GetService("ReplicatedStorage")
+      local r2_256 = game:GetService("RunService")
+      local r3_256 = game:GetService("Players")
+      local r4_256 = game:GetService("Lighting")
+      local r5_256 = r3_256.LocalPlayer
+      local r6_256 = workspace.CurrentCamera
+      local function r7_256(r0_274)
+        -- line: [0, 0] id: 274
+        local r1_274, r2_274 = pcall(function()
+          -- line: [0, 0] id: 275
+          return require(r0_274)
+        end)
+        if r1_274 then
+          return r2_274
+        end
+        return nil
+      end
+      local r8_256 = nil
+      if r1_256:FindFirstChild("Packages") and r1_256.Packages:FindFirstChild("Shake") then
+        r8_256 = r7_256(r1_256.Packages.Shake)
+      end
+      local r9_256 = nil
+      local function r10_256()
+        -- line: [0, 0] id: 284
+        for r4_284, r5_284 in ipairs({
+          "Shared",
+          "Modules",
+          "Client",
+          "SharedModules"
+        }) do
+          local r6_284 = r1_256:FindFirstChild(r5_284)
+          if r6_284 and r6_284:FindFirstChild("ShakePresets") then
+            return r7_256(r6_284.ShakePresets), r6_284.ShakePresets
+          end
+        end
+        if r1_256:FindFirstChild("ShakePresets") then
+          return r7_256(r1_256.ShakePresets), r1_256.ShakePresets
+        end
+        return nil, nil
+      end
+      r9_256, _ = r10_256()
+      local r11_256 = nil	-- notice: implicit variable refs by block#[10, 12]
+      if r8_256 then
+        r11_256 = type(r8_256.new)
+        if r11_256 == "function" then
+          r11_256 = r8_256.new
+          function r8_256.new(...)
+            -- line: [0, 0] id: 276
+            local r1_276 = r11_256(...)
+            if type(r1_276.BindToRenderStep) == "function" then
+              function r1_276.BindToRenderStep()
+                -- line: [0, 0] id: 280
+              end
+            end
+            if type(r1_276.OnSignal) == "function" then
+              function r1_276.OnSignal()
+                -- line: [0, 0] id: 277
+              end
+            end
+            if type(r1_276.Start) == "function" then
+              function r1_276.Start()
+                -- line: [0, 0] id: 279
+              end
+            end
+            if type(r1_276.Stop) == "function" then
+              function r1_276.Stop()
+                -- line: [0, 0] id: 278
+              end
+            end
+            if type(r1_276.StopSustain) == "function" then
+              function r1_276.StopSustain()
+                -- line: [0, 0] id: 281
+              end
+            end
+            return r1_276
+          end
+          -- close: r11_256
+        end
+        r11_256 = type
+        r11_256 = r11_256(r8_256.NextRenderName)
+        if r11_256 == "function" then
+          function r11_256()
+            -- line: [0, 0] id: 273
+            return "__disabled_shake__"
+          end
+          r8_256.NextRenderName = r11_256
+        end
+      end
+      function r11_256(r0_266)
+        -- line: [0, 0] id: 266
+        if type(r0_266) ~= "table" then
+          return 
+        end
+        for r4_266, r5_266 in pairs(r0_266) do
+          if type(r5_266) == "table" then
+            if type(r5_266.StopSustain) == "function" then
+              pcall(function()
+                -- line: [0, 0] id: 267
+                r5_266:StopSustain()
+              end)
+            end
+            if type(r5_266.Stop) == "function" then
+              pcall(function()
+                -- line: [0, 0] id: 269
+                r5_266:Stop()
+              end)
+            end
+            if type(r5_266.BindToRenderStep) == "function" then
+              function r5_266.BindToRenderStep()
+                -- line: [0, 0] id: 271
+              end
+            end
+            if type(r5_266.OnSignal) == "function" then
+              function r5_266.OnSignal()
+                -- line: [0, 0] id: 268
+              end
+            end
+            if type(r5_266.Start) == "function" then
+              function r5_266.Start()
+                -- line: [0, 0] id: 272
+              end
+            end
+            if type(r5_266.Update) == "function" then
+              function r5_266.Update()
+                -- line: [0, 0] id: 270
+              end
+            end
+          end
+          -- close: r4_266
+        end
+      end
+      if r9_256 then
+        r11_256(r9_256)
+        if type(r9_256.BindShakeToCamera) == "function" then
+          function r9_256.BindShakeToCamera()
+            -- line: [0, 0] id: 282
+            return function()
+              -- line: [0, 0] id: 283
+            end
+          end
+        end
+      end
+      local function r12_256()
+        -- line: [0, 0] id: 259
+        for r3_259, r4_259 in ipairs(r4_256:GetChildren()) do
+          if r4_259:IsA("PostEffect") then
+            pcall(function()
+              -- line: [0, 0] id: 260
+              r4_259:Destroy()
+            end)
+          end
+          -- close: r3_259
+        end
+        for r3_259, r4_259 in ipairs(r5_256:GetDescendants()) do
+          if r4_259:IsA("Sound") then
+            local r5_259 = r4_259.Name:lower()
+            if r5_259:find("boom") or r5_259:find("boogie") or r5_259:find("bump") or r5_259:find("rumble") or r5_259:find("quake") then
+              pcall(function()
+                -- line: [0, 0] id: 261
+                r4_259:Stop()
+              end)
+            end
+          end
+          -- close: r3_259
+        end
+      end
+      (function()
+        -- line: [0, 0] id: 257
+        r6_256.FieldOfView = 70
+        r6_256:GetPropertyChangedSignal("FieldOfView"):Connect(function()
+          -- line: [0, 0] id: 258
+          r6_256.FieldOfView = 70
+        end)
+      end)()
+      _G.GigyToggleActive = true
+      task.spawn(function()
+        -- line: [0, 0] id: 262
+        while _G.GigyToggleActive do
+          task.wait(0.6)
+          local r0_262 = r8_256
+          if not r0_262 then
+            r0_262 = r1_256:FindFirstChild("Packages")
+            if r0_262 then
+              r0_262 = r1_256.Packages:FindFirstChild("Shake")
+              if r0_262 then
+                r8_256 = r7_256(r1_256.Packages.Shake)
+                r0_262 = r8_256
+                if r0_262 then
+                  r0_262 = type(r8_256.NextRenderName)
+                  if r0_262 == "function" then
+                    r0_262 = r8_256
+                    function r0_262.NextRenderName()
+                      -- line: [0, 0] id: 265
+                      return "__disabled_shake__"
+                    end
+                  end
+                end
+              end
+            end
+          end
+          r0_262 = r9_256
+          if not r0_262 then
+            r9_256, _ = r10_256()
+            r0_262 = r9_256
+            if r0_262 then
+              r0_262 = type(r9_256.BindShakeToCamera)
+              if r0_262 == "function" then
+                r0_262 = r9_256
+                function r0_262.BindShakeToCamera()
+                  -- line: [0, 0] id: 263
+                  return function()
+                    -- line: [0, 0] id: 264
+                  end
+                end
+              end
+            end
+          end
+          r0_262 = r9_256
+          if r0_262 then
+            r11_256(r9_256)
+          end
+          r12_256()
+          r0_262 = r6_256.FieldOfView
+          if r0_262 ~= 70 then
+            r0_262 = r6_256
+            r0_262.FieldOfView = 70
+          end
+        end
+      end)
+      -- close: r1_256
+    else
+      r1_256 = _G
+      r1_256.GigyToggleActive = false
+    end
+  end,
+}, "Toggle")
+r25_0:CreateSection("Stealer Section")
+local r45_0 = r25_0:CreateToggle({
+  Name = "Invisible Desync (Need 7 rebirths)",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_158)
+    -- line: [0, 0] id: 158
+    local r2_158 = game:GetService("Players")
+    local r3_158 = game:GetService("ReplicatedStorage")
+    local r4_158 = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("DesyncGui")
+    if r4_158 then
+      r4_158.Enabled = r0_158
+      return 
+    end
+    if r0_158 then
+      local r6_158 = game:GetService("Players").LocalPlayer
+      local r7_158 = game:GetService("ReplicatedStorage")
+      local function r8_158()
+        -- line: [0, 0] id: 159
+        pcall(function()
+          -- line: [0, 0] id: 160
+          setfflag("WorldStepsOffsetAdjustRate", "-9999999999")
+        end)
+      end
+      local function r9_158()
+        -- line: [0, 0] id: 162
+        task.wait(3.5)
+        pcall(function()
+          -- line: [0, 0] id: 163
+          setfflag("WorldStepsOffsetAdjustRate", "-1")
+        end)
+      end
+      local function r10_158()
+        -- line: [0, 0] id: 161
+        r8_158()
+        local r0_161 = r6_158:WaitForChild("Backpack")
+        local r1_161 = r6_158.Character or r6_158.CharacterAdded:Wait()
+        local r2_161 = r1_161:WaitForChild("Humanoid")
+        local r3_161 = r0_161:FindFirstChild("Quantum Cloner") or r1_161:FindFirstChild("Quantum Cloner")
+        if not r3_161 then
+          return 
+        end
+        if r1_161:FindFirstChild(r3_161.Name) ~= r3_161 then
+          r2_161:EquipTool(r3_161)
+        end
+        local r4_161 = r7_158:WaitForChild("Packages", 5)
+        local r5_161 = r4_161 and r4_161:FindFirstChild("Net")
+        if not r5_161 then
+          return 
+        end
+        local r6_161 = r5_161:FindFirstChild("RE/UseItem")
+        local r7_161 = r5_161:FindFirstChild("RE/QuantumCloner/OnTeleport")
+        if r6_161 and r7_161 then
+          r6_161:FireServer()
+          r7_161:FireServer()
+        end
+        firesignal(r7_158.Packages.Net["RE/NotificationService/Notify"].OnClientEvent, "<font color=\"#92FF67\"># Anti Hit Activated!</font>", 5, "Sounds.Sfx.Success")
+        task.spawn(r9_158)
+      end
+      local r11_158 = Instance.new("ScreenGui")
+      r11_158.Name = "DesyncGui"
+      r11_158.ResetOnSpawn = false
+      r11_158.Parent = r6_158:WaitForChild("PlayerGui")
+      local r12_158 = Instance.new("Frame")
+      r12_158.Size = UDim2.new(0, 160, 0, 50)
+      r12_158.Position = UDim2.new(1, -450, 0, 150)
+      r12_158.AnchorPoint = Vector2.new(0.5, 0.5)
+      r12_158.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+      r12_158.BorderSizePixel = 0
+      r12_158.Parent = r11_158
+      local r13_158 = Instance.new("UICorner")
+      r13_158.CornerRadius = UDim.new(0, 15)
+      r13_158.Parent = r12_158
+      local r14_158 = Instance.new("UIStroke")
+      r14_158.Thickness = 3
+      r14_158.Parent = r12_158
+      local r15_158 = Instance.new("Frame")
+      r15_158.Size = UDim2.new(1, -12, 1, -12)
+      r15_158.Position = UDim2.new(0, 6, 0, 6)
+      r15_158.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+      r15_158.BorderSizePixel = 0
+      r15_158.Parent = r12_158
+      local r16_158 = Instance.new("UICorner")
+      r16_158.CornerRadius = UDim.new(0, 10)
+      r16_158.Parent = r15_158
+      local r17_158 = Instance.new("TextButton")
+      r17_158.Size = UDim2.new(1, 0, 1, 0)
+      r17_158.BackgroundTransparency = 1
+      r17_158.Text = "Desync"
+      r17_158.Font = Enum.Font.GothamBold
+      r17_158.TextScaled = true
+      r17_158.TextColor3 = Color3.fromRGB(255, 255, 255)
+      r17_158.Parent = r15_158
+      local r18_158 = Instance.new("Frame")
+      r18_158.Size = UDim2.new(1.2, 0, 1.2, 0)
+      r18_158.Position = UDim2.new(-0.1, 0, -0.1, 0)
+      r18_158.BackgroundTransparency = 1
+      r18_158.Parent = r12_158
+      local r19_158 = false
+      local r20_158 = nil
+      local r21_158 = nil
+      r18_158.InputBegan:Connect(function(r0_166)
+        -- line: [0, 0] id: 166
+        if r0_166.UserInputType == Enum.UserInputType.Touch or r0_166.UserInputType == Enum.UserInputType.MouseButton1 then
+          r19_158 = true
+          r20_158 = r0_166.Position
+          r21_158 = r12_158.Position
+          r0_166.Changed:Connect(function()
+            -- line: [0, 0] id: 167
+            if r0_166.UserInputState == Enum.UserInputState.End then
+              r19_158 = false
+            end
+          end)
+        end
+      end)
+      r18_158.InputChanged:Connect(function(r0_168)
+        -- line: [0, 0] id: 168
+        if r19_158 and (r0_168.UserInputType == Enum.UserInputType.Touch or r0_168.UserInputType == Enum.UserInputType.MouseMovement) then
+          local r1_168 = r0_168.Position - r20_158
+          r12_158.Position = UDim2.new(r21_158.X.Scale, r21_158.X.Offset + r1_168.X, r21_158.Y.Scale, r21_158.Y.Offset + r1_168.Y)
+        end
+      end)
+      r17_158.MouseButton1Click:Connect(function()
+        -- line: [0, 0] id: 165
+        r10_158()
+      end)
+      task.spawn(function()
+        -- line: [0, 0] id: 164
+        local r0_164 = 0
+        while task.wait(0.05) do
+          r0_164 = r0_164 + 0.01
+          local r1_164 = Color3.fromHSV(r0_164 % 1, 1, 1)
+          r14_158.Color = r1_164
+          r17_158.TextColor3 = r1_164
+        end
+      end)
+      -- close: r5_158
+    end
+  end,
+}, "Toggle")
+local r46_0 = r25_0:CreateToggle({
+  Name = "Invisible Desync (Without Quantum Cloner)",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_113)
+    -- line: [0, 0] id: 113
+    local r2_113 = game:GetService("Players")
+    local r3_113 = game:GetService("ReplicatedStorage")
+    local r4_113 = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("DesyncWithoutClone")
+    if r4_113 then
+      r4_113.Enabled = r0_113
+      return 
+    end
+    if r0_113 then
+      local r5_113 = game:GetService("Players")
+      local r6_113 = game:GetService("RunService")
+      local r7_113 = game:GetService("ReplicatedStorage")
+      local r8_113 = r5_113.LocalPlayer
+      local r9_113 = r8_113:WaitForChild("PlayerGui")
+      local function r10_113()
+        -- line: [0, 0] id: 118
+        local r0_118 = r8_113.Character
+        if not r0_118 or not r0_118:FindFirstChild("HumanoidRootPart") then
+          return 
+        end
+        local r1_118 = r0_118.HumanoidRootPart
+        for r5_118 = 1, 5, 1 do
+          r1_118.CFrame = r1_118.CFrame * CFrame.new(-350, 0, 0)
+          task.wait(0.1)
+        end
+      end
+      local function r11_113()
+        -- line: [0, 0] id: 114
+        r10_113()
+        setfflag("WorldStepsOffsetAdjustRate", "-9999999999")
+        task.wait(1)
+        setfflag("WorldStepsOffsetAdjustRate", "-1")
+      end
+      local r12_113 = Instance.new("ScreenGui")
+      r12_113.Name = "DesyncWithoutClone"
+      r12_113.ResetOnSpawn = false
+      r12_113.Parent = r9_113
+      local r13_113 = Instance.new("Frame")
+      r13_113.Size = UDim2.new(0, 160, 0, 50)
+      r13_113.Position = UDim2.new(1, -450, 0, 220)
+      r13_113.AnchorPoint = Vector2.new(0.5, 0.5)
+      r13_113.BackgroundColor3 = Color3.fromRGB(10, 30, 80)
+      r13_113.BorderSizePixel = 0
+      r13_113.Parent = r12_113
+      local r14_113 = Instance.new("UICorner")
+      r14_113.CornerRadius = UDim.new(0, 15)
+      r14_113.Parent = r13_113
+      local r15_113 = Instance.new("UIStroke")
+      r15_113.Thickness = 3
+      r15_113.Color = Color3.fromRGB(0, 140, 255)
+      r15_113.Parent = r13_113
+      local r16_113 = Instance.new("Frame")
+      r16_113.Size = UDim2.new(1, -12, 1, -12)
+      r16_113.Position = UDim2.new(0, 6, 0, 6)
+      r16_113.BackgroundColor3 = Color3.fromRGB(25, 60, 150)
+      r16_113.BorderSizePixel = 0
+      r16_113.Parent = r13_113
+      local r17_113 = Instance.new("UICorner")
+      r17_113.CornerRadius = UDim.new(0, 10)
+      r17_113.Parent = r16_113
+      local r18_113 = Instance.new("TextButton")
+      r18_113.Size = UDim2.new(1, 0, 1, 0)
+      r18_113.BackgroundTransparency = 1
+      r18_113.Text = "Desync"
+      r18_113.Font = Enum.Font.GothamBold
+      r18_113.TextScaled = true
+      r18_113.TextColor3 = Color3.fromRGB(255, 255, 255)
+      r18_113.Parent = r16_113
+      local r19_113 = Instance.new("Frame")
+      r19_113.Size = UDim2.new(1.2, 0, 1.2, 0)
+      r19_113.Position = UDim2.new(-0.1, 0, -0.1, 0)
+      r19_113.BackgroundTransparency = 1
+      r19_113.Parent = r13_113
+      local r20_113 = false
+      local r21_113 = nil
+      local r22_113 = nil
+      r19_113.InputBegan:Connect(function(r0_115)
+        -- line: [0, 0] id: 115
+        if r0_115.UserInputType == Enum.UserInputType.Touch or r0_115.UserInputType == Enum.UserInputType.MouseButton1 then
+          r20_113 = true
+          r21_113 = r0_115.Position
+          r22_113 = r13_113.Position
+          r0_115.Changed:Connect(function()
+            -- line: [0, 0] id: 116
+            if r0_115.UserInputState == Enum.UserInputState.End then
+              r20_113 = false
+            end
+          end)
+        end
+      end)
+      r19_113.InputChanged:Connect(function(r0_119)
+        -- line: [0, 0] id: 119
+        if r20_113 and (r0_119.UserInputType == Enum.UserInputType.Touch or r0_119.UserInputType == Enum.UserInputType.MouseMovement) then
+          local r1_119 = r0_119.Position - r21_113
+          r13_113.Position = UDim2.new(r22_113.X.Scale, r22_113.X.Offset + r1_119.X, r22_113.Y.Scale, r22_113.Y.Offset + r1_119.Y)
+        end
+      end)
+      r18_113.MouseButton1Click:Connect(function()
+        -- line: [0, 0] id: 117
+        r11_113()
+        local r0_117 = r7_113:FindFirstChild("Packages") and r7_113.Packages:FindFirstChild("Net") and r7_113.Packages.Net:FindFirstChild("RE/NotificationService/Notify")
+        if r0_117 then
+          firesignal(r0_117.OnClientEvent, "<font color=\"#6DC3FF\"># NO Clone Desync Activated!</font>", 5, "Sounds.Sfx.Success")
+        end
+      end)
+      task.spawn(function()
+        -- line: [0, 0] id: 120
+        local r0_120 = 0
+        while task.wait(0.05) do
+          r0_120 = r0_120 + 0.01
+          local r1_120 = math.sin(r0_120 * 3) * 0.5 + 0.5
+          r15_113.Color = Color3.fromRGB(0, 120 + r1_120 * 80, 255)
+          r18_113.TextColor3 = Color3.fromRGB(180 + r1_120 * 75, 220 + r1_120 * 35, 255)
+        end
+      end)
+      -- close: r5_113
+    end
+  end,
+}, "Toggle")
+local r47_0 = r25_0:CreateToggle({
+  Name = "Web Sling Killer (need 6 rebirths)",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_285)
+    -- line: [0, 0] id: 285
+    local r2_285 = game:GetService("Players")
+    local r3_285 = game:GetService("ReplicatedStorage")
+    local r4_285 = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ActivateButtonGui")
+    if r4_285 then
+      r4_285.Enabled = r0_285
+      return 
+    end
+    if r0_285 then
+      local r5_285 = game:GetService("Players")
+      local r6_285 = game:GetService("ReplicatedStorage")
+      local r7_285 = game:GetService("RunService")
+      local r8_285 = r5_285.LocalPlayer
+      if not r8_285 then
+        return 
+      end
+      local r9_285 = Instance.new("ScreenGui")
+      r9_285.Name = "ActivateButtonGui"
+      r9_285.ResetOnSpawn = false
+      r9_285.Parent = r8_285:WaitForChild("PlayerGui")
+      local r10_285 = Instance.new("Frame")
+      r10_285.Name = "MainFrame"
+      r10_285.Size = UDim2.new(0, 200, 0, 130)
+      r10_285.Position = UDim2.new(1, -1050, 0, 100)
+      r10_285.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+      r10_285.BorderSizePixel = 0
+      r10_285.Active = true
+      r10_285.Parent = r9_285
+      local r11_285 = Instance.new("UIStroke", r10_285)
+      r11_285.Thickness = 2
+      r11_285.Color = Color3.fromRGB(0, 255, 100)
+      Instance.new("UICorner", r10_285).CornerRadius = UDim.new(0, 8)
+      local r13_285 = Instance.new("ImageLabel")
+      r13_285.Name = "CircleV"
+      r13_285.Size = UDim2.new(0, 40, 0, 40)
+      r13_285.Position = UDim2.new(0.5, -20, 0, 8)
+      r13_285.BackgroundTransparency = 1
+      r13_285.Image = "rbxassetid://101748902728550"
+      r13_285.ImageColor3 = Color3.fromRGB(0, 255, 100)
+      r13_285.ScaleType = Enum.ScaleType.Fit
+      r13_285.Parent = r10_285
+      Instance.new("UICorner", r13_285).CornerRadius = UDim.new(1, 0)
+      local r15_285 = Instance.new("UIStroke", r13_285)
+      r15_285.Thickness = 2
+      r15_285.Color = Color3.fromRGB(0, 255, 100)
+      local r16_285 = Instance.new("TextButton")
+      r16_285.Name = "ActivateButton"
+      r16_285.Size = UDim2.new(0.8, 0, 0, 40)
+      r16_285.Position = UDim2.new(0.1, 0, 0.55, 0)
+      r16_285.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+      r16_285.Text = "ACTIVATE"
+      r16_285.TextColor3 = Color3.fromRGB(0, 255, 100)
+      r16_285.Font = Enum.Font.GothamBold
+      r16_285.TextScaled = true
+      r16_285.Parent = r10_285
+      Instance.new("UICorner", r16_285).CornerRadius = UDim.new(1, 0)
+      local r18_285 = Instance.new("UIStroke", r16_285)
+      r18_285.Thickness = 1.5
+      r18_285.Color = Color3.fromRGB(0, 255, 100)
+      local r19_285 = Instance.new("Frame")
+      r19_285.Size = UDim2.new(1.2, 0, 1.2, 0)
+      r19_285.Position = UDim2.new(-0.1, 0, -0.1, 0)
+      r19_285.BackgroundTransparency = 1
+      r19_285.Parent = r10_285
+      local r20_285 = nil
+      local r21_285 = nil
+      local r22_285 = nil
+      r19_285.InputBegan:Connect(function(r0_286)
+        -- line: [0, 0] id: 286
+        if r0_286.UserInputType == Enum.UserInputType.Touch or r0_286.UserInputType == Enum.UserInputType.MouseButton1 then
+          r20_285 = true
+          r21_285 = r0_286.Position
+          r22_285 = r10_285.Position
+          r0_286.Changed:Connect(function()
+            -- line: [0, 0] id: 287
+            if r0_286.UserInputState == Enum.UserInputState.End then
+              r20_285 = false
+            end
+          end)
+        end
+      end)
+      r19_285.InputChanged:Connect(function(r0_291)
+        -- line: [0, 0] id: 291
+        if r20_285 and (r0_291.UserInputType == Enum.UserInputType.Touch or r0_291.UserInputType == Enum.UserInputType.MouseMovement) then
+          local r1_291 = r0_291.Position - r21_285
+          r10_285.Position = UDim2.new(r22_285.X.Scale, r22_285.X.Offset + r1_291.X, r22_285.Y.Scale, r22_285.Y.Offset + r1_291.Y)
+        end
+      end)
+      task.spawn(function()
+        -- line: [0, 0] id: 290
+        local r0_290 = 0
+        while task.wait(0.05) do
+          r0_290 = r0_290 + 0.01
+          local r1_290 = Color3.fromHSV(r0_290 % 1, 1, 1)
+          r11_285.Color = r1_290
+          r15_285.Color = r1_290
+          r13_285.ImageColor3 = r1_290
+          r18_285.Color = r1_290
+          r16_285.TextColor3 = r1_290
+        end
+      end)
+      local r23_285 = nil
+      local function r24_285(r0_298, r1_298, r2_298)
+        -- line: [0, 0] id: 298
+        local r3_298, r4_298 = pcall(function()
+          -- line: [0, 0] id: 301
+          return r6_285:WaitForChild("Packages"):WaitForChild("Net"):WaitForChild("RE/NotificationService/Notify")
+        end)
+        local r5_298 = nil	-- notice: implicit variable refs by block#[3, 5, 6]
+        if r3_298 then
+          r5_298 = r4_298
+          if r5_298 then
+            ::label_8::
+            r5_298 = nil
+          end
+        else
+          goto label_8	-- block#2 is visited secondly
+        end
+        if r5_298 then
+          if type(firesignal) == "function" then
+            pcall(function()
+              -- line: [0, 0] id: 300
+              local r0_300 = firesignal
+              local r1_300 = r5_298.OnClientEvent
+              local r2_300 = r0_298
+              local r3_300 = r1_298 or 5
+              r0_300(r1_300, r2_300, r3_300, r2_298 or "Sounds.Sfx.Success")
+            end)
+          else
+            pcall(function()
+              -- line: [0, 0] id: 299
+              local r0_299 = r5_298.OnClientEvent
+              local r2_299 = r0_298
+              local r3_299 = r1_298 or 5
+              r0_299:Fire(r2_299, r3_299, r2_298 or "Sounds.Sfx.Success")
+            end)
+          end
+        end
+      end
+      local function r25_285(r0_294)
+        -- line: [0, 0] id: 294
+        local r1_294 = r8_285.Character and r8_285.Character:FindFirstChild("HumanoidRootPart")
+        if not r1_294 then
+          return nil
+        end
+        local r2_294 = nil
+        local r3_294 = math.huge
+        for r7_294, r8_294 in pairs(r5_285:GetPlayers()) do
+          if r8_294 ~= r8_285 and r8_294.Character and r8_294.Character:FindFirstChild("HumanoidRootPart") then
+            local r10_294 = (r8_294.Character.HumanoidRootPart.Position - r1_294.Position).Magnitude
+            if r10_294 < r3_294 and r10_294 <= (r0_294 or 250) then
+              r3_294 = r10_294
+              r2_294 = r8_294
+            end
+          end
+        end
+        return r2_294
+      end
+      local function r26_285()
+        -- line: [0, 0] id: 304
+        local r0_304 = r8_285:WaitForChild("Backpack")
+        local r1_304 = r8_285.Character or r8_285.CharacterAdded:Wait()
+        local r2_304 = "Web Slinger"
+        local r3_304 = r0_304:FindFirstChild(r2_304) or r1_304:FindFirstChild(r2_304)
+        if not r3_304 then
+          local r4_304, r5_304 = pcall(function()
+            -- line: [0, 0] id: 305
+            return r6_285:WaitForChild("Packages"):WaitForChild("Net"):FindFirstChild("RF/CoinsShopService/RequestBuy")
+          end)
+          if r4_304 and r5_304 then
+            pcall(function()
+              -- line: [0, 0] id: 306
+              r5_304:InvokeServer(r2_304)
+            end)
+            task.wait(0.5)
+            r3_304 = r0_304:FindFirstChild(r2_304) or r1_304:FindFirstChild(r2_304)
+            if r3_304 then
+              r24_285("<font color=\"#92FF67\">Web Slinger Purchased!</font>")
+            end
+          end
+          -- close: r4_304
+        end
+        if r3_304 and r3_304.Parent ~= r1_304 then
+          r3_304.Parent = r1_304
+        end
+        return r3_304
+      end
+      local function r27_285()
+        -- line: [0, 0] id: 307
+        if not r26_285() then
+          return false
+        end
+        local r1_307, r2_307 = pcall(function()
+          -- line: [0, 0] id: 309
+          return r6_285:WaitForChild("Packages"):WaitForChild("Net"):FindFirstChild("RE/UseItem")
+        end)
+        local r3_307 = r25_285(30)
+        if r1_307 and r2_307 and r3_307 and r3_307.Character and r3_307.Character:FindFirstChild("HumanoidRootPart") then
+          pcall(function()
+            -- line: [0, 0] id: 308
+            r2_307:FireServer(r3_307.Character.HumanoidRootPart.Position, r3_307.Character.HumanoidRootPart)
+          end)
+          r24_285("<font color=\"#92FF67\">You Slinged " .. tostring(r3_307.Name) .. " </font>")
+          return true
+        end
+        return false
+      end
+      local function r28_285()
+        -- line: [0, 0] id: 302
+        local r0_302 = r25_285()
+        if not r0_302 or not r0_302.Character then
+          warn("No nearby player found!")
+          return 
+        end
+        local r1_302 = r0_302.Character:FindFirstChild("HumanoidRootPart")
+        if not r1_302 then
+          return 
+        end
+        if r23_285 then
+          r23_285:Disconnect()
+        end
+        local r2_302 = true
+        r23_285 = r7_285.Heartbeat:Connect(function()
+          -- line: [0, 0] id: 303
+          if r0_302 and r0_302.Character and r1_302 then
+            if r2_302 then
+              r1_302.CFrame = r1_302.CFrame + Vector3.new(0, 20, 0)
+            else
+              r1_302.CFrame = r1_302.CFrame + Vector3.new(0, -20, 0)
+            end
+            r2_302 = not r2_302
+          end
+          task.wait(0.5)
+        end)
+        r24_285("<font color=\"#92FF67\">Reset " .. tostring(r0_302.Name) .. " </font>")
+      end
+      local r29_285 = workspace:FindFirstChild("ESP_NeonGreen") or Instance.new("Folder", workspace)
+      r29_285.Name = "ESP_NeonGreen"
+      local r30_285 = Color3.fromRGB(0, 255, 100)
+      local r31_285 = nil
+      local function r32_285()
+        -- line: [0, 0] id: 288
+        if r31_285 then
+          r31_285:Disconnect()
+          r31_285 = nil
+        end
+        for r3_288, r4_288 in pairs(r29_285:GetChildren()) do
+          pcall(function()
+            -- line: [0, 0] id: 289
+            r4_288:Destroy()
+          end)
+          -- close: r3_288
+        end
+      end
+      local function r33_285(r0_296)
+        -- line: [0, 0] id: 296
+        if not r0_296 or not r0_296.Character then
+          return 
+        end
+        local r1_296 = r0_296.Character:FindFirstChild("HumanoidRootPart")
+        if not r1_296 then
+          return 
+        end
+        local r2_296 = Instance.new("Highlight")
+        r2_296.FillTransparency = 0.7
+        r2_296.FillColor = r30_285
+        r2_296.OutlineColor = r30_285
+        r2_296.OutlineTransparency = 0
+        r2_296.Parent = r29_285
+        r2_296.Adornee = r0_296.Character
+        local r3_296 = Instance.new("BillboardGui")
+        r3_296.Size = UDim2.new(0, 200, 0, 50)
+        r3_296.Adornee = r1_296
+        r3_296.AlwaysOnTop = true
+        r3_296.Parent = r29_285
+        local r4_296 = Instance.new("TextLabel")
+        r4_296.Size = UDim2.new(1, 0, 0, 24)
+        r4_296.Position = UDim2.new(0, 0, 0, 0)
+        r4_296.BackgroundTransparency = 1
+        r4_296.TextColor3 = r30_285
+        r4_296.TextStrokeTransparency = 0.5
+        r4_296.Font = Enum.Font.GothamBold
+        r4_296.TextScaled = true
+        r4_296.Text = r0_296.Name
+        r4_296.Parent = r3_296
+        local r5_296 = Instance.new("TextLabel")
+        r5_296.Size = UDim2.new(1, 0, 0, 20)
+        r5_296.Position = UDim2.new(0, 0, 0, 26)
+        r5_296.BackgroundTransparency = 1
+        r5_296.TextColor3 = Color3.fromRGB(200, 255, 200)
+        r5_296.Font = Enum.Font.Gotham
+        r5_296.TextScaled = true
+        r5_296.Text = "..."
+        r5_296.Parent = r3_296
+        r31_285 = r7_285.RenderStepped:Connect(function()
+          -- line: [0, 0] id: 297
+          if r8_285.Character and r8_285.Character:FindFirstChild("HumanoidRootPart") and r1_296 then
+            r5_296.Text = tostring(math.floor((r8_285.Character.HumanoidRootPart.Position - r1_296.Position).Magnitude)) .. " studs"
+          end
+        end)
+      end
+      task.spawn(function()
+        -- line: [0, 0] id: 293
+        while task.wait(0.3) do
+          local r0_293 = r25_285(30)
+          r32_285()
+          if r0_293 then
+            r33_285(r0_293)
+          end
+        end
+      end)
+      r16_285.MouseButton1Click:Connect(function()
+        -- line: [0, 0] id: 295
+        if r27_285() then
+          r28_285()
+        end
+      end)
+      r8_285.CharacterAdded:Connect(function()
+        -- line: [0, 0] id: 292
+        task.wait(2)
+        r9_285.Parent = r8_285:WaitForChild("PlayerGui")
+      end)
+      -- close: r5_285
+    end
+  end,
+}, "Toggle")
+local r48_0 = r25_0:CreateToggle({
+  Name = "Steal Up Stairs",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_67)
+    -- line: [0, 0] id: 67
+    local r2_67 = game:GetService("Players")
+    local r3_67 = game:GetService("ReplicatedStorage")
+    local r4_67 = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("AutoStealGui")
+    if r4_67 then
+      r4_67.Enabled = r0_67
+      return 
+    end
+    if r0_67 then
+      local r5_67 = game:GetService("Players")
+      local r6_67 = game:GetService("RunService")
+      local r7_67 = game:GetService("Workspace")
+      local r8_67 = game:GetService("ReplicatedStorage")
+      local r9_67 = game:GetService("TweenService")
+      local r10_67 = r5_67.LocalPlayer
+      local r11_67 = r10_67.Character or r10_67.CharacterAdded:Wait()
+      local r12_67 = r11_67:WaitForChild("HumanoidRootPart")
+      local r13_67 = r7_67.CurrentCamera
+      local r14_67 = 1.8
+      _G.AutoStealEnabled = false
+      local r15_67 = false
+      local r16_67 = false
+      local r17_67 = "Laser Cape"
+      local r18_67 = 60
+      local r19_67 = nil
+      local r20_67 = nil
+      local r21_67 = -3
+      local function r22_67()
+        -- line: [0, 0] id: 69
+        if not r19_67 then
+          r19_67 = Instance.new("Part")
+          r19_67.Size = Vector3.new(6, 1, 6)
+          r19_67.Anchored = true
+          r19_67.CanCollide = true
+          r19_67.Material = Enum.Material.Neon
+          r19_67.Color = Color3.fromRGB(0, 0, 255)
+          r19_67.Parent = workspace
+          local r0_69 = Instance.new("SelectionBox")
+          r0_69.Adornee = r19_67
+          r0_69.LineThickness = 0.03
+          r0_69.Color3 = Color3.fromRGB(0, 0, 255)
+          r0_69.SurfaceTransparency = 0.5
+          r0_69.Parent = r19_67
+          r20_67 = r6_67.Heartbeat:Connect(function()
+            -- line: [0, 0] id: 70
+            if r12_67 and r19_67 then
+              r19_67.Position = r12_67.Position + Vector3.new(0, r21_67, 0)
+            end
+          end)
+        end
+      end
+      local function r23_67()
+        -- line: [0, 0] id: 87
+        if r20_67 then
+          r20_67:Disconnect()
+          r20_67 = nil
+        end
+        if r19_67 then
+          r19_67:Destroy()
+          r19_67 = nil
+        end
+      end
+      local function r24_67()
+        -- line: [0, 0] id: 71
+        for r3_71, r4_71 in pairs(workspace:GetDescendants()) do
+          if r4_71:IsA("ProximityPrompt") and r4_71.ActionText == "Steal" then
+            local r5_71 = nil
+            if r4_71.Parent:IsA("Attachment") then
+              r5_71 = r4_71.Parent.WorldPosition
+            elseif r4_71.Parent:IsA("BasePart") then
+              r5_71 = r4_71.Parent.Position
+            end
+            if r5_71 and (r12_67.Position - r5_71).Magnitude <= 20 then
+              r4_71:InputHoldBegin()
+              task.wait(r14_67)
+              r4_71:InputHoldEnd()
+            end
+          end
+        end
+      end
+      local function r25_67(r0_77)
+        -- line: [0, 0] id: 77
+        if not r0_77 or not r0_77:IsA("ProximityPrompt") then
+          return 
+        end
+        if r0_77.ActionText ~= "Steal" then
+          return 
+        end
+        r0_77.Triggered:Connect(function()
+          -- line: [0, 0] id: 78
+          if not _G.AutoStealEnabled then
+            return 
+          end
+          task.spawn(function()
+            -- line: [0, 0] id: 79
+            task.wait(r14_67)
+            if r0_77:IsDescendantOf(workspace) and _G.AutoStealEnabled then
+              _G.AutoStealEnabled = false
+              r23_67()
+            end
+          end)
+        end)
+      end
+      for r29_67, r30_67 in pairs(workspace:GetDescendants()) do
+        pcall(r25_67, r30_67)
+      end
+      workspace.DescendantAdded:Connect(function(r0_80)
+        -- line: [0, 0] id: 80
+        pcall(r25_67, r0_80)
+      end)
+      local r28_67 = nil	-- notice: implicit variable refs by block#[10]
+      local r31_67 = nil	-- notice: implicit variable refs by block#[10]
+      if not r10_67:WaitForChild("PlayerGui"):FindFirstChild("AutoStealGui") then
+        local r26_67 = Instance.new("ScreenGui")
+        r26_67.Name = "AutoStealGui"
+        r26_67.ResetOnSpawn = false
+        r26_67.Parent = r10_67:WaitForChild("PlayerGui")
+        local r27_67 = Instance.new("Frame")
+        r27_67.Size = UDim2.new(0, 220, 0, 50)
+        r27_67.Position = UDim2.new(1, -250, 0, 250)
+        r27_67.AnchorPoint = Vector2.new(0.5, 0.5)
+        r27_67.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        r27_67.Parent = r26_67
+        Instance.new("UICorner", r27_67).CornerRadius = UDim.new(0, 15)
+        r28_67 = Instance.new("UIStroke")
+        r28_67.Thickness = 3
+        r28_67.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        r28_67.Parent = r27_67
+        task.spawn(function()
+          -- line: [0, 0] id: 82
+          local r0_82 = 0
+          while task.wait(0.05) do
+            r0_82 = r0_82 + 0.01
+            local r1_82 = r28_67
+            r1_82.Color = Color3.fromHSV(r0_82 % 1, 1, 1)
+          end
+        end)
+        r27_67.Active = true
+        r27_67.Draggable = true
+        local r29_67 = Instance.new("ImageLabel")
+        r29_67.Size = UDim2.new(0, 30, 0, 30)
+        r29_67.Position = UDim2.new(0, 10, 0.5, -15)
+        r29_67.BackgroundTransparency = 1
+        r29_67.Image = "rbxassetid://101748902728550"
+        r29_67.Parent = r27_67
+        local r30_67 = Instance.new("TextLabel")
+        r30_67.Size = UDim2.new(0, 120, 1, 0)
+        r30_67.Position = UDim2.new(0, 50, 0, 0)
+        r30_67.BackgroundTransparency = 1
+        r30_67.Text = "Up Stairs"
+        r30_67.TextColor3 = Color3.fromRGB(255, 255, 255)
+        r30_67.TextSize = 18
+        r30_67.Font = Enum.Font.GothamBold
+        r30_67.TextXAlignment = Enum.TextXAlignment.Left
+        r30_67.Parent = r27_67
+        r31_67 = Instance.new("TextButton")
+        r31_67.Size = UDim2.new(0, 50, 0, 25)
+        r31_67.Position = UDim2.new(1, -60, 0.5, -12)
+        r31_67.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+        r31_67.Text = ""
+        r31_67.Parent = r27_67
+        Instance.new("UICorner", r31_67).CornerRadius = UDim.new(1, 0)
+        local r32_67 = Instance.new("Frame")
+        r32_67.Size = UDim2.new(0, 20, 0, 20)
+        r32_67.Position = UDim2.new(0, 3, 0.5, -10)
+        r32_67.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        r32_67.Parent = r31_67
+        Instance.new("UICorner", r32_67).CornerRadius = UDim.new(1, 0)
+        r31_67.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 68
+          _G.AutoStealEnabled = not _G.AutoStealEnabled
+          r15_67 = _G.AutoStealEnabled
+          r16_67 = _G.AutoStealEnabled
+          if _G.AutoStealEnabled then
+            r31_67.BackgroundColor3 = Color3.fromRGB(3, 252, 48)
+            r32_67:TweenPosition(UDim2.new(1, -23, 0.5, -10), "Out", "Sine", 0.2, true)
+            r22_67()
+            applyDevCamera()
+          else
+            r23_67()
+            r31_67.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+            r32_67:TweenPosition(UDim2.new(0, 3, 0.5, -10), "Out", "Sine", 0.2, true)
+            resetCamera()
+          end
+        end)
+        -- close: r27_67
+      end
+      function r28_67()
+        -- line: [0, 0] id: 91
+        -- notice: unreachable block#3
+        while true do
+          if _G.AutoStealEnabled then
+            pcall(r24_67)
+          end
+          task.wait(0.01)
+        end
+      end
+      task.spawn(r28_67)
+      local function r27_67(r0_84)
+        -- line: [0, 0] id: 84
+        local r1_84, r2_84 = pcall(function()
+          -- line: [0, 0] id: 86
+          return r8_67.Packages.Net:FindFirstChild("RF/CoinsShopService/RequestBuy")
+        end)
+        if r1_84 and r2_84 then
+          pcall(function()
+            -- line: [0, 0] id: 85
+            r2_84:InvokeServer(r0_84)
+          end)
+        end
+      end
+      function r28_67(r0_81)
+        -- line: [0, 0] id: 81
+        local r1_81 = r10_67.Character
+        if not r1_81 or not r1_81:FindFirstChild("HumanoidRootPart") then
+          return nil
+        end
+        local r2_81 = r1_81.HumanoidRootPart.Position
+        local r3_81 = nil
+        local r4_81 = math.huge
+        for r8_81, r9_81 in ipairs(r5_67:GetPlayers()) do
+          if r9_81 ~= r10_67 and r9_81.Character and r9_81.Character:FindFirstChild("HumanoidRootPart") then
+            local r10_81 = r9_81.Character:FindFirstChildOfClass("Humanoid")
+            if r10_81 and 0 < r10_81.Health then
+              local r11_81 = (r2_81 - r9_81.Character.HumanoidRootPart.Position).Magnitude
+              if r11_81 < r4_81 and r11_81 <= r0_81 then
+                r4_81 = r11_81
+                r3_81 = r9_81.Character.HumanoidRootPart
+              end
+            end
+          end
+        end
+        return r3_81
+      end
+      task.spawn(function()
+        -- line: [0, 0] id: 75
+        -- notice: unreachable block#17
+        while true do
+          task.wait(0.25)
+          if r15_67 then
+            local r0_75 = r10_67.Character or r10_67.CharacterAdded:Wait()
+            local r1_75 = r10_67:WaitForChild("Backpack")
+            local r2_75 = r0_75:FindFirstChild(r17_67) or r1_75:FindFirstChild(r17_67)
+            if not r2_75 then
+              r27_67(r17_67)
+              r2_75 = r0_75:FindFirstChild(r17_67) or r1_75:FindFirstChild(r17_67)
+            end
+            if r2_75 and r2_75.Parent ~= r0_75 then
+              r2_75.Parent = r0_75
+            end
+            local r3_75 = r8_67.Packages.Net:FindFirstChild("RE/UseItem")
+            if r3_75 and r2_75 then
+              local r4_75 = r28_67(r18_67)
+              if r4_75 then
+                pcall(function()
+                  -- line: [0, 0] id: 76
+                  r3_75:FireServer(r4_75.Position, r4_75)
+                end)
+              end
+              -- close: r4_75
+            end
+            -- close: r0_75
+          end
+        end
+      end)
+      local r29_67 = {
+        CameraMinZoomDistance = r10_67.CameraMinZoomDistance,
+        CameraMode = r13_67.CameraType,
+        DevCameraOcclusionMode = Enum.DevCameraOcclusionMode.Zoom,
+        DevEnableMouseLock = false,
+      }
+      function applyDevCamera()
+        -- line: [0, 0] id: 72
+        for r4_72, r5_72 in pairs({
+          CameraMinZoomDistance = 0.5,
+          CameraMode = Enum.CameraMode.Classic,
+          DevEnableMouseLock = true,
+          DevCameraOcclusionMode = Enum.DevCameraOcclusionMode.Invisicam,
+        }) do
+          if r10_67[r4_72] ~= nil then
+            pcall(function()
+              -- line: [0, 0] id: 73
+              r10_67[r4_72] = r5_72
+            end)
+          elseif r13_67[r4_72] ~= nil then
+            pcall(function()
+              -- line: [0, 0] id: 74
+              r13_67[r4_72] = r5_72
+            end)
+          end
+          -- close: r4_72
+        end
+      end
+      function resetCamera()
+        -- line: [0, 0] id: 88
+        for r3_88, r4_88 in pairs(r29_67) do
+          if r10_67[r3_88] ~= nil then
+            pcall(function()
+              -- line: [0, 0] id: 90
+              r10_67[r3_88] = r4_88
+            end)
+          elseif r13_67[r3_88] ~= nil then
+            pcall(function()
+              -- line: [0, 0] id: 89
+              r13_67[r3_88] = r4_88
+            end)
+          end
+          -- close: r3_88
+        end
+      end
+      r31_67 = r10_67.CharacterAdded
+      r31_67:Connect(function(r0_83)
+        -- line: [0, 0] id: 83
+        r11_67 = r0_83
+        r12_67 = r0_83:WaitForChild("HumanoidRootPart")
+      end)
+      -- close: r5_67
+    end
+  end,
+}, "Toggle")
+local r49_0 = false
+local r50_0 = nil
+local r51_0 = r25_0:CreateToggle({
+  Name = "Float to Camera",
+  CurrentValue = false,
+  Callback = function(r0_100)
+    -- line: [0, 0] id: 100
+    r49_0 = r0_100
+    local r2_100 = game:GetService("Players").LocalPlayer
+    local r3_100 = game:GetService("RunService")
+    if r50_0 then
+      r50_0:Disconnect()
+      r50_0 = nil
+    end
+    if r49_0 then
+      local r5_100 = (r2_100.Character or r2_100.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart")
+      r50_0 = r3_100.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 101
+        if r49_0 and r5_100 then
+          r5_100.Velocity = workspace.CurrentCamera.CFrame.LookVector * 25
+        end
+      end)
+      -- close: r4_100
+    end
+  end,
+}, "TelequinoToggle")
+local r52_0 = r25_0:CreateToggle({
+  Name = "Float to Base",
+  Description = "",
+  CurrentValue = false,
+  Callback = function(r0_20)
+    -- line: [0, 0] id: 20
+    local r2_20 = game:GetService("Players")
+    local r3_20 = game:GetService("ReplicatedStorage")
+    local r4_20 = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("FloatGui")
+    if r4_20 then
+      r4_20.Enabled = r0_20
+      return 
+    end
+    if r0_20 then
+      local r5_20 = game:GetService("Players")
+      local r6_20 = game:GetService("RunService")
+      local r7_20 = game:GetService("Workspace")
+      local r8_20 = r5_20.LocalPlayer
+      local r9_20 = r8_20.Character or r8_20.CharacterAdded:Wait()
+      local r10_20 = r9_20:WaitForChild("Humanoid")
+      local r11_20 = r9_20:WaitForChild("HumanoidRootPart")
+      local r12_20 = false
+      local r13_20 = nil
+      local r14_20 = 20
+      local r15_20 = 40
+      r8_20.CharacterAdded:Connect(function(r0_25)
+        -- line: [0, 0] id: 25
+        r9_20 = r0_25
+        r10_20 = r0_25:WaitForChild("Humanoid")
+        r11_20 = r0_25:WaitForChild("HumanoidRootPart")
+      end)
+      local function r17_20()
+        -- line: [0, 0] id: 23
+        local r0_23 = nil	-- notice: implicit variable refs by block#[5, 7]
+        for r4_23, r5_23 in pairs(r7_20.Plots:GetChildren()) do
+          local r6_23 = r5_23:FindFirstChild("YourBase", true)
+          if r6_23 and r6_23.Enabled then
+            r0_23 = r5_23
+            break
+          end
+        end
+        if not r0_23 then
+          return nil
+        end
+        return r0_23:FindFirstChild("AnimalTarget", true)
+      end
+      local function r18_20()
+        -- line: [0, 0] id: 22
+        local r0_22 = r17_20()
+        if not r0_22 or not r11_20 then
+          return false
+        end
+        local r1_22 = Vector3.new(r11_20.Position.X, 0, r11_20.Position.Z)
+        local r2_22 = Vector3.new(r0_22.Position.X, 0, r0_22.Position.Z)
+        local r4_22 = math.abs(r11_20.Position.Y - r0_22.Position.Y)
+        local r5_22 = r14_20
+        if (r1_22 - r2_22).Magnitude <= r5_22 then
+          r5_22 = r4_22 <= r15_20
+        else
+          goto label_44	-- block#5 is visited secondly
+        end
+        return r5_22
+      end
+      local function r19_20(r0_24)
+        -- line: [0, 0] id: 24
+        if r13_20 then
+          r13_20:Disconnect()
+          r13_20 = nil
+        end
+        r12_20 = false
+        if r0_24 and switch and knob then
+          switch.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+          knob:TweenPosition(UDim2.new(0, 3, 0.5, -10), "Out", "Sine", 0.2, true)
+        end
+      end
+      local function r20_20()
+        -- line: [0, 0] id: 27
+        if r13_20 then
+          r13_20:Disconnect()
+        end
+        r13_20 = r6_20.Heartbeat:Connect(function()
+          -- line: [0, 0] id: 28
+          if r12_20 and r11_20 then
+            local r0_28 = r17_20()
+            if not r0_28 then
+              return 
+            end
+            if r18_20() then
+              r19_20(true)
+              return 
+            end
+            local r1_28 = Vector3.new(r0_28.Position.X, 0, r0_28.Position.Z) - Vector3.new(r11_20.Position.X, 0, r11_20.Position.Z)
+            local r2_28 = r1_28.Magnitude
+            local r3_28 = Vector3.zero
+            if r2_28 > 0 then
+              r3_28 = r1_28.Unit * math.min(r2_28, 25)
+            end
+            r11_20.Velocity = Vector3.new(r3_28.X, 0, r3_28.Z)
+          end
+        end)
+      end
+      if not r8_20:WaitForChild("PlayerGui"):FindFirstChild("FloatGui") then
+        local r21_20 = Instance.new("ScreenGui")
+        r21_20.Name = "FloatGui"
+        r21_20.ResetOnSpawn = false
+        r21_20.Parent = r8_20:WaitForChild("PlayerGui")
+        local r22_20 = Instance.new("Frame")
+        r22_20.Size = UDim2.new(0, 220, 0, 50)
+        r22_20.Position = UDim2.new(1, -250, 0, 160)
+        r22_20.AnchorPoint = Vector2.new(0.5, 0.5)
+        r22_20.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        r22_20.Parent = r21_20
+        Instance.new("UICorner", r22_20).CornerRadius = UDim.new(0, 15)
+        local r23_20 = Instance.new("UIStroke")
+        r23_20.Thickness = 3
+        r23_20.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        r23_20.Parent = r22_20
+        task.spawn(function()
+          -- line: [0, 0] id: 21
+          local r0_21 = 0
+          while task.wait(0.05) do
+            r0_21 = r0_21 + 0.01
+            local r1_21 = r23_20
+            r1_21.Color = Color3.fromHSV(r0_21 % 1, 1, 1)
+          end
+        end)
+        r22_20.Active = true
+        r22_20.Draggable = true
+        local r24_20 = Instance.new("ImageLabel")
+        r24_20.Size = UDim2.new(0, 30, 0, 30)
+        r24_20.Position = UDim2.new(0, 10, 0.5, -15)
+        r24_20.BackgroundTransparency = 1
+        r24_20.Image = "rbxassetid://101748902728550"
+        r24_20.Parent = r22_20
+        local r25_20 = Instance.new("TextLabel")
+        r25_20.Size = UDim2.new(0, 120, 1, 0)
+        r25_20.Position = UDim2.new(0, 50, 0, 0)
+        r25_20.BackgroundTransparency = 1
+        r25_20.Text = "Float V3"
+        r25_20.TextColor3 = Color3.fromRGB(255, 255, 255)
+        r25_20.TextSize = 18
+        r25_20.Font = Enum.Font.GothamBold
+        r25_20.TextXAlignment = Enum.TextXAlignment.Left
+        r25_20.Parent = r22_20
+        switch = Instance.new("TextButton")
+        switch.Size = UDim2.new(0, 50, 0, 25)
+        switch.Position = UDim2.new(1, -60, 0.5, -12)
+        switch.AnchorPoint = Vector2.new(0, 0)
+        switch.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+        switch.Text = ""
+        switch.Parent = r22_20
+        Instance.new("UICorner", switch).CornerRadius = UDim.new(1, 0)
+        knob = Instance.new("Frame")
+        knob.Size = UDim2.new(0, 20, 0, 20)
+        knob.Position = UDim2.new(0, 3, 0.5, -10)
+        knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        knob.Parent = switch
+        Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+        switch.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 26
+          r12_20 = not r12_20
+          if r12_20 then
+            switch.BackgroundColor3 = Color3.fromRGB(3, 252, 48)
+            knob:TweenPosition(UDim2.new(1, -23, 0.5, -10), "Out", "Sine", 0.2, true)
+            r20_20()
+          else
+            r19_20(true)
+          end
+        end)
+        -- close: r22_20
+      end
+      -- close: r5_20
+    end
+  end,
+}, "Toggle")
