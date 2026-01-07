@@ -1,6 +1,6 @@
 -- This script is open-source, this is the official Nytherune Hub page made by Wx.
 
-local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
+local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/arnit-dev/redz-hub-library-v5-c0bddc5/refs/heads/main/V5/Source.lua"))()
 workspace.FallenPartsDestroyHeight = -math.huge
 
 local Window = Libary:MakeWindow({
